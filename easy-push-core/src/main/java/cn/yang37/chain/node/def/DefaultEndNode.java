@@ -1,0 +1,37 @@
+package cn.yang37.chain.node.def;
+
+import cn.yang37.chain.node.MessageNodeAdapter;
+import cn.yang37.entity.MessageContext;
+import cn.yang37.util.GsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+
+/**
+ * @description:
+ * @class: DefInitMessageHandler
+ * @author: yang37z@qq.com
+ * @date: 2023/1/13 23:09
+ * @version: 1.0
+ */
+public class DefaultEndNode extends MessageNodeAdapter {
+    private static final Logger log = LoggerFactory.getLogger(DefaultEndNode.class);
+
+
+    @Override
+    public MessageContext nodeSingleSend(MessageContext messageContext) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+        if (true) {
+            log.info("<== [singleSend] chain end: {}", GsonUtil.toJson(messageContext));
+        }
+        return messageContext;
+    }
+
+    @Override
+    public List<MessageContext> nodeMultipleSend(List<MessageContext> messageContextList) {
+        return null;
+    }
+}

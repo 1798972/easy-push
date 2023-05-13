@@ -1,0 +1,10 @@
+cn:
+  yang37:
+    easy-push:
+      enabled: ding,sms
+      ding:
+        base-url: 123
+        access-key: 123
+        secret: 123
+
+
