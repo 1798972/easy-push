@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <trees>
+     <tree path="/easy-push-core" title="core包"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/entity" title="信息实体"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/enums" title="枚举"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/enums/MessageContentType.java" title="消息类型"
+           extension="java"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/enums/MessageDestinationType.java" title="消息目的地"
+           extension="java"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/enums/MessageSceneType.java" title="消息场景"
+           extension="java"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/entity/bo" title="普通对象"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/strategy" title="策略"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/annotation" title="注解"/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37" title=""/>
+     <tree path="/easy-push-core/src/main/java/cn/yang37/chain" title="职责链"/>
+    <tree path="/easy-push-test" title="测试包"/>
+    <tree path="/easy-push-app" title="main"/>
+    <tree path="/easy-push-model" title="实体类"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/service/execute/AbstractMessageService.java" title="消息服务"
+          extension="java"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/strategy/service/AbstractMessageServiceStrategy.java"
+          title="消息服务策略" extension="java"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/chain/example" title="模板"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/chain/node" title="节点"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/chain/template" title="模版"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/factory" title="工厂"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/function" title="函数"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/exception" title="异常"/>
+    <tree path="/easy-push-model/src/main/java/cn/yang37/entity/context" title="上下文"/>
+    <tree path="/easy-push-model/src/main/java/cn/yang37/entity/message" title="message实体类"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/chain/node/sms/ali/v3" title="阿里云短信V3版"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/chain/node/sms/tencent/v3" title="腾讯云短信V3版"/>
+    <tree path="/easy-push-core/src/main/java/cn/yang37/chain/node/ding" title="钉钉消息"/>
+</trees>
