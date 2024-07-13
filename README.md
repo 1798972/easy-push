@@ -300,15 +300,19 @@ public interface SendMessageService {
 
 ##### 1.导入pom
 
-在Maven中央仓库查询最新版本：[cn.yang37 » easy-push-app](https://mvnrepository.com/artifact/cn.yang37/easy-push-app)
+在mvnrepository查询最新版本：[cn.yang37 » easy-push-app](https://mvnrepository.com/artifact/cn.yang37/easy-push-app)
+
+或者在 sonatype 查询最新版本：[cn.yang37 » easy-push-app](https://central.sonatype.com/search?q=easy-push-app)
 
 ```xml
     	<dependency>
             <groupId>cn.yang37</groupId>
             <artifactId>easy-push-app</artifactId>
-            <version>0.1.3</version>
+            <version>${latest.version}</version>
         </dependency>
 ```
+
+
 
 ##### 2.编写配置文件
 
