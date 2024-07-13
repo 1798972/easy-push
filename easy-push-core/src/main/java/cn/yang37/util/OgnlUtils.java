@@ -24,7 +24,7 @@ public class OgnlUtils {
      * @param <R>          .
      * @return Function<T, R>
      */
-    private static <T, R> Function<T, R> wrap(OgnlFunction<T, R> ognlFunction) {
+    public static <T, R> Function<T, R> wrap(OgnlFunction<T, R> ognlFunction) {
         return arg -> {
             try {
                 return ognlFunction.apply(arg);

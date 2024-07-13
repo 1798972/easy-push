@@ -34,6 +34,11 @@ public enum MessageSceneType {
      */
     DING,
 
+    /**
+     * 微信测试号
+     */
+    VX_TEST_ACCOUNT,
+
     ;
 
 }

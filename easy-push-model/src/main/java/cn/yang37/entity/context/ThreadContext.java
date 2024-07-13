@@ -60,7 +60,7 @@ public class ThreadContext {
     /**
      * 从线程上下文中获取内容
      *
-     * @param key
+     * @param key .
      */
     public static <T> T getContext(String key) {
         Map<String, Object> ctx = CTX_HOLDER.get();
@@ -68,6 +68,19 @@ public class ThreadContext {
             return null;
         }
         return (T) ctx.get(key);
+    }
+
+
+    /**
+     * 从线程上下文中获取内容
+     */
+    public static <T> T getContext(String key, Class<T> tClass) {
+        Map<String, Object> ctx = CTX_HOLDER.get();
+        if (null == ctx) {
+            return null;
+        }
+
+        return tClass.cast(ctx.get(key));
     }
 
     /**

@@ -4,10 +4,12 @@ import cn.yang37.chain.MessageChain;
 import cn.yang37.chain.template.MessageChainDing;
 import cn.yang37.chain.template.MessageChainSmsAli;
 import cn.yang37.chain.template.MessageChainSmsTencentV3;
+import cn.yang37.chain.template.MessageChainVxTestAccountMessage;
 import cn.yang37.service.AbstractMessageService;
 import cn.yang37.service.impl.DingTextMessageServiceImpl;
 import cn.yang37.service.impl.SmsAliMessageServiceImpl;
 import cn.yang37.service.impl.SmsTencentV3MessageServiceImpl;
+import cn.yang37.service.impl.VxTestAccountMessageServiceImpl;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +36,7 @@ public class MessageChainFactory {
         clazz4Chain.put(MessageChainDing.class, new MessageChainDing());
         clazz4Chain.put(MessageChainSmsTencentV3.class, new MessageChainSmsTencentV3());
         clazz4Chain.put(MessageChainSmsAli.class, new MessageChainSmsAli());
+        clazz4Chain.put(MessageChainVxTestAccountMessage.class, new MessageChainVxTestAccountMessage());
     }
 
     /*
@@ -42,6 +45,7 @@ public class MessageChainFactory {
         serviceClazz4Chain.put(DingTextMessageServiceImpl.class, getMessageChainByClass(MessageChainDing.class));
         serviceClazz4Chain.put(SmsTencentV3MessageServiceImpl.class, getMessageChainByClass(MessageChainSmsTencentV3.class));
         serviceClazz4Chain.put(SmsAliMessageServiceImpl.class, getMessageChainByClass(MessageChainSmsAli.class));
+        serviceClazz4Chain.put(VxTestAccountMessageServiceImpl.class, getMessageChainByClass(MessageChainVxTestAccountMessage.class));
     }
 
     private MessageChainFactory() {

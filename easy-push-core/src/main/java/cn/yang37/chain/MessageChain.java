@@ -47,15 +47,15 @@ public abstract class MessageChain {
      *
      * @param messageContext .
      * @return .
-     * @throws Exception .
      */
-    public MessageContext execute(MessageContext messageContext) throws Exception {
+    public MessageContext execute(MessageContext messageContext) {
         MessageContext resultMessageContext;
         try {
             resultMessageContext = chainEndDeal(chainExecute(chainPreDeal(messageContext)));
         } catch (Exception e) {
-            ThreadContext.clean();
             throw new ExecuteException(e);
+        } finally {
+            ThreadContext.clean();
         }
         return resultMessageContext;
     }

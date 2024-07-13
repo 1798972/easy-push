@@ -15,4 +15,5 @@ import cn.yang37.util.MessageProvider;
 public abstract class MessageNodeAdapter extends MessageProvider implements MessageNode {
 
     protected final ConfigFactory configFactory = ConfigFactory.instance();
+
 }

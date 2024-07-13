@@ -68,6 +68,7 @@ public abstract class MessageProvider {
                 .messageSceneType(message.getMessageSceneType())
                 .timestamp(String.valueOf(System.currentTimeMillis()))
                 .message(message)
+                .state(false)
                 .build();
     }
 

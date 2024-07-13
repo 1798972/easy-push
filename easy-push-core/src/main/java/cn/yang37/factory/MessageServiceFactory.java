@@ -6,6 +6,7 @@ import cn.yang37.service.AbstractMessageService;
 import cn.yang37.service.impl.DingTextMessageServiceImpl;
 import cn.yang37.service.impl.SmsAliMessageServiceImpl;
 import cn.yang37.service.impl.SmsTencentV3MessageServiceImpl;
+import cn.yang37.service.impl.VxTestAccountMessageServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +43,7 @@ public class MessageServiceFactory {
         class4ServiceMap.put(DingTextMessageServiceImpl.class, new DingTextMessageServiceImpl());
         class4ServiceMap.put(SmsTencentV3MessageServiceImpl.class, new SmsTencentV3MessageServiceImpl());
         class4ServiceMap.put(SmsAliMessageServiceImpl.class, new SmsAliMessageServiceImpl());
+        class4ServiceMap.put(VxTestAccountMessageServiceImpl.class, new VxTestAccountMessageServiceImpl());
     }
 
     /*
@@ -50,6 +52,7 @@ public class MessageServiceFactory {
         scene4ServicePool.put(MessageSceneType.DING, getMessageService(DingTextMessageServiceImpl.class));
         scene4ServicePool.put(MessageSceneType.SMS_TENCENT_V3, getMessageService(SmsTencentV3MessageServiceImpl.class));
         scene4ServicePool.put(MessageSceneType.SMS_ALI_V3, getMessageService(SmsAliMessageServiceImpl.class));
+        scene4ServicePool.put(MessageSceneType.VX_TEST_ACCOUNT, getMessageService(VxTestAccountMessageServiceImpl.class));
     }
 
     private MessageServiceFactory() {

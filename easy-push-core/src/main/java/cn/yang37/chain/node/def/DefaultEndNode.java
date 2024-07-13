@@ -23,7 +23,7 @@ public class DefaultEndNode extends MessageNodeAdapter {
     public MessageContext nodeSingleSend(MessageContext messageContext) {
         if (true) {
             Boolean state = messageContext.getState();
-            log.info("result -> {}", state);
+            log.info("(MessageContext.state) result-> {}", state);
             log.info("<==== [singleSend] chain end: {}", GsonUtils.toJson(messageContext));
             TraceUtils.traceEnd();
         }

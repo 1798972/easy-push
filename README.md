@@ -29,11 +29,14 @@
 
 ### 1.1 支持的渠道
 
-| 序号 | 渠道             | 实体类              | 说明                                                         |
-| ---- | ---------------- | ------------------- | ------------------------------------------------------------ |
-| 1    | 钉钉群文本消息   | DingTextMessage     | 钉钉文本类消息                                               |
-| 2    | 腾讯云短信（V3） | SmsTencentV3Message | [腾讯云短信](https://cloud.tencent.com/document/product/382/55981) |
-| 3    | 阿里云短信（V3） | SmsAliV3Message     | [阿里云短信](https://help.aliyun.com/zh/sms/?spm=a2c4g.11186623.0.0.24735ee7SZGzIE) |
+| 序号 | 渠道             | 实体类               | 说明                                                         | 测试类                                                       | 说明文档                                |
+| ---- | ---------------- | -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------- |
+| 1    | 钉钉群文本消息   | DingTextMessage      | 钉钉文本类消息                                               | [MainTest.sendDingTextMessage](easy-push-test/src/test/java/MainTest.java) | -                                       |
+| 2    | 腾讯云短信（V3） | SmsTencentV3Message  | [腾讯云短信](https://cloud.tencent.com/document/product/382/55981) | [MainTest.sendTencentSmsV3Message](easy-push-test/src/test/java/MainTest.java) | -                                       |
+| 3    | 阿里云短信（V3） | SmsAliV3Message      | [阿里云短信](https://help.aliyun.com/zh/sms/?spm=a2c4g.11186623.0.0.24735ee7SZGzIE) | [MainTest.sendSmsAliV3Message](easy-push-test/src/test/java/MainTest.java) | -                                       |
+| 4    | 微信测试号       | VxTestAccountMessage | [微信测试号](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) | [MainTest.sendVxTestAccountMessage](easy-push-test/src/test/java/MainTest.java) | [4-微信测试号.md](docs/4-微信测试号.md) |
+
+
 
 ### 1.2 更新记录
 
@@ -41,7 +44,7 @@
 
 
 
-## 2.接入渠道
+## 2.支持渠道
 
 > 在classpath下新增加`easy-push.properties`文件
 
@@ -63,6 +66,11 @@ cn.yang37.easy-push.sms.tencent-v3.secret-key=xxx
 cn.yang37.easy-push.sms.ali-v3.base-url=https://dysmsapi.aliyuncs.com
 cn.yang37.easy-push.sms.ali-v3.access-key-id=xxx
 cn.yang37.easy-push.sms.ali-v3.access-key-secret=xxx
+
+############### 微信测试号消息
+cn.yang37.easy-push.vx.test-account.base-url=https://api.weixin.qq.com/cgi-bin/message/template/send
+cn.yang37.easy-push.vx.test-account.app-id=xxx
+cn.yang37.easy-push.vx.test-account.app-secret=xxx
 ```
 
 
@@ -188,6 +196,54 @@ cn.yang37.easy-push.sms.ali-v3.access-key-secret=xxx
                 .SignName("阿里云短信测试")
                 .TemplateCode("SMS_154950909")
                 .TemplateParam("{\"code\":\"1234\"}")
+                .build();
+```
+
+
+
+### 2.4 微信测试号
+
+#### 2.3.1 配置项
+
+| 前缀            | 项         | 类型   | 说明                                                         |
+| --------------- | ---------- | ------ | ------------------------------------------------------------ |
+| vx.test-account | base-url   | String | 推送url，内网时可以是代理机地址。默认值为: https://api.weixin.qq.com/cgi-bin/message/template/send |
+| vx.test-account | app-id     | String | 测试号管理-测试号信息：[appID](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) |
+| vx.test-account | app-secret | String | 测试号管理-测试号信息：[appsecret](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) |
+
+```properties
+cn.yang37.easy-push.vx.test-account.base-url=https://api.weixin.qq.com/cgi-bin/message/template/send
+cn.yang37.easy-push.vx.test-account.app-id=xxx
+cn.yang37.easy-push.vx.test-account.app-secret=xxx
+```
+
+#### 2.3.2 实体类
+
+**实体类：VxTestAccountMessage**
+
+详情请参考微信官方文档-公众号-模版消息接口：[发送模板消息](https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html#5)
+
+| 字段名        | 含义                                                         | 类型   | 说明 |
+| ------------- | ------------------------------------------------------------ | ------ | ---- |
+| touser        | 接收者openid                                                 | string |      |
+| template_id   | 模板ID                                                       | string |      |
+| url           | 模板跳转链接（海外账号没有跳转能力）                         | string |      |
+| miniprogram   | 跳小程序所需数据，不需跳小程序可不用传该数据                 | string |      |
+| appid         | 所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar），要求该小程序已发布，暂不支持小游戏 | string |      |
+| pagepath      | 外部流水扩展字段                                             | string |      |
+| data          | 模板数据                                                     | string |      |
+| client_msg_id | 防重入id。对于同一个openid + client_msg_id, 只发送一条消息,10分钟有效,超过10分钟不保证效果。若无防重入需求，可不填 | string |      |
+
+构建实体类：
+
+```java
+        VxTestAccountMessage vxTestAccountMessage = VxTestAccountMessage.builder()
+                .touser("xxx")
+                .templateId("xxxx")
+                .url("https://baidu.com")
+                .data("title", "123")
+                .data("time", "456")
+                .data("content", "789")
                 .build();
 ```
 
