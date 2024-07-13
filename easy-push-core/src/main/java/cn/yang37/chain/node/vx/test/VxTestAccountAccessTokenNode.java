@@ -26,8 +26,10 @@ public class VxTestAccountAccessTokenNode extends MessageNodeAdapterVxTestAccoun
         String appId = configProperties.getAppId();
         String appSecret = configProperties.getAppSecret();
 
+        // 构建请求
+        String tokenUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, configProperties.getBaseUrl(), VxTestAccountConstant.GetAccessToken.PATH);
         HttpResult httpResult = OkHttps
-                .sync(VxTestAccountConstant.GetAccessToken.ACCESS_TOKEN_URL)
+                .sync(tokenUrl)
                 .addUrlPara(VxTestAccountConstant.GetAccessToken.GRANT_TYPE, VxTestAccountConstant.GetAccessToken.CLIENT_CREDENTIAL)
                 .addUrlPara(VxTestAccountConstant.GetAccessToken.APP_ID, appId)
                 .addUrlPara(VxTestAccountConstant.GetAccessToken.SECRET, appSecret)

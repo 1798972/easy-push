@@ -65,7 +65,7 @@ class MainTest {
         VxTestAccountMessage vxTestAccountMessage = VxTestAccountMessage.builder()
                 .touser("xxx")
                 .templateId("xxx")
-                .url("https://xxx")
+                .url("")
                 .data("title", "标题1")
                 .data("time", "时间2")
                 .data("content", "内容3")

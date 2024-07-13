@@ -21,4 +21,11 @@ public class HttpUtils {
         return (T) OgnlUtils.wrap(value -> Ognl.getValue(expression, value, resultType)).apply(map);
     }
 
+    public static String formatSendUrl(String defUrl, String realUrl, String path) {
+        if (org.apache.commons.lang3.StringUtils.isEmpty(realUrl)) {
+            return defUrl + path;
+        }
+
+        return realUrl + path;
+    }
 }

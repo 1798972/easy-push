@@ -11,7 +11,6 @@ import cn.zhxu.okhttps.HttpResult;
 import cn.zhxu.okhttps.OkHttps;
 import cn.zhxu.okhttps.SHttpTask;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.common.util.UrlUtils;
 
 import java.util.List;
@@ -32,14 +31,9 @@ public class VxTestAccountSendNode extends MessageNodeAdapterVxTestAccountMessag
         String accessToken = ThreadContext.getContext(VxTestAccountConstant.GetAccessToken.ACCESS_TOKEN, String.class);
         String reqData = GsonUtils.toJsonSnakeCase(vxTestAccountMessage);
 
-        // 请求URL
-        String baseUrl = configProperties.getBaseUrl();
-        if (StringUtils.isEmpty(baseUrl)) {
-            baseUrl = VxTestAccountConstant.URL;
-        }
-
         // 构建请求
-        SHttpTask httpTask = OkHttps.sync(baseUrl)
+        String sendUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, configProperties.getBaseUrl(), VxTestAccountConstant.PATH);
+        SHttpTask httpTask = OkHttps.sync(sendUrl)
                 .addUrlPara(VxTestAccountConstant.GetAccessToken.ACCESS_TOKEN, accessToken)
                 .setBodyPara(reqData)
                 .bodyType(OkHttps.JSON);

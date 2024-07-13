@@ -9,11 +9,15 @@ package cn.yang37.constant;
  */
 public class VxTestAccountConstant {
 
+    public static final String URL = "https://api.weixin.qq.com";
+
+    public static final String PATH = "/cgi-bin/message/template/send";
+
     public static final class GetAccessToken {
         /**
          * 获取AccessToken
          */
-        public static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
+        public static final String PATH = "/cgi-bin/token";
 
         public static final String GRANT_TYPE = "grant_type";
 
@@ -29,8 +33,5 @@ public class VxTestAccountConstant {
 
 
     }
-
-    public static final String URL = "https://api.weixin.qq.com/cgi-bin/message/template/send";
-
 
 }

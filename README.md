@@ -68,7 +68,7 @@ cn.yang37.easy-push.sms.ali-v3.access-key-id=xxx
 cn.yang37.easy-push.sms.ali-v3.access-key-secret=xxx
 
 ############### 微信测试号消息
-cn.yang37.easy-push.vx.test-account.base-url=https://api.weixin.qq.com/cgi-bin/message/template/send
+cn.yang37.easy-push.vx.test-account.base-url=https://api.weixin.qq.com
 cn.yang37.easy-push.vx.test-account.app-id=xxx
 cn.yang37.easy-push.vx.test-account.app-secret=xxx
 ```
@@ -207,12 +207,12 @@ cn.yang37.easy-push.sms.ali-v3.access-key-secret=xxx
 
 | 前缀            | 项         | 类型   | 说明                                                         |
 | --------------- | ---------- | ------ | ------------------------------------------------------------ |
-| vx.test-account | base-url   | String | 推送url，内网时可以是代理机地址。默认值为: https://api.weixin.qq.com/cgi-bin/message/template/send |
+| vx.test-account | base-url   | String | 推送url，内网时可以是代理机地址。默认值为: https://api.weixin.qq.com<br />请求时完整的路径为：{base-url}/cgi-bin/message/template/send<br />即为空或者不修改时默认完整url为：https://api.weixin.qq.com/cgi-bin/message/template/send |
 | vx.test-account | app-id     | String | 测试号管理-测试号信息：[appID](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) |
 | vx.test-account | app-secret | String | 测试号管理-测试号信息：[appsecret](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) |
 
 ```properties
-cn.yang37.easy-push.vx.test-account.base-url=https://api.weixin.qq.com/cgi-bin/message/template/send
+cn.yang37.easy-push.vx.test-account.base-url=https://api.weixin.qq.com
 cn.yang37.easy-push.vx.test-account.app-id=xxx
 cn.yang37.easy-push.vx.test-account.app-secret=xxx
 ```
