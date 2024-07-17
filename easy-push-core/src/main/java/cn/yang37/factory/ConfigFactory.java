@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -53,38 +55,48 @@ public class ConfigFactory {
         // 查找文件
         for (int i = 0; i < size; i++) {
             String configPath = configList.get(i);
+            log.debug("Attempting to load configuration from: {}", configPath);
             try {
                 Properties tmpConfig = new Properties();
-                if (configPath.endsWith(ConfigConstant.PROPERTIES)) {
-                    try (InputStream inputStream = ConfigFactory.class.getClassLoader().getResourceAsStream(configPath)) {
-                        if (inputStream != null) {
-                            tmpConfig.load(inputStream);
-                        }
+                InputStream inputStream = getConfigInputStream(configPath);
+                if (inputStream != null) {
+                    if (configPath.endsWith(ConfigConstant.PROPERTIES)) {
+                        tmpConfig.load(inputStream);
+                    } else if (configPath.endsWith(ConfigConstant.YML) || configPath.endsWith(ConfigConstant.YAML)) {
+                        Yaml yaml = new Yaml();
+                        Map<String, Object> yamlMap = yaml.load(inputStream);
+                        tmpConfig.putAll(flattenYamlMap(yamlMap, null));
                     }
-                } else if (configPath.endsWith(ConfigConstant.YML) || configPath.endsWith(ConfigConstant.YAML)) {
-                    Yaml yaml = new Yaml();
-                    try (InputStream inputStream = ConfigFactory.class.getClassLoader().getResourceAsStream(configPath)) {
-                        if (inputStream != null) {
-                            Map<String, Object> yamlMap = yaml.load(inputStream);
-                            tmpConfig.putAll(flattenYamlMap(yamlMap, null));
-                        }
-                    }
+                    inputStream.close();
                 }
                 if (ObjectUtils.isNotEmpty(tmpConfig)) {
                     config = tmpConfig;
-                    log.debug("find the configuration file at: {}", configPath);
+                    log.debug("Found the configuration file at: {}", configPath);
                     break;
                 }
             } catch (Exception e) {
-                log.debug("[{}-{}] failed to load configuration from: {}", i, size, configPath, e);
+                log.error("Failed to load configuration from: {}", configPath, e);
             }
         }
 
         if (ObjectUtils.isEmpty(config)) {
-            throw new ConfigException("error initializing configuration file!");
+            log.error("No configuration file found in the provided paths.");
+            throw new ConfigException("Error initializing configuration file!");
         }
 
         return config;
+    }
+
+    private static InputStream getConfigInputStream(String configPath) {
+        InputStream inputStream = ConfigFactory.class.getClassLoader().getResourceAsStream(configPath);
+        if (inputStream == null) {
+            try {
+                inputStream = Files.newInputStream(Paths.get(configPath));
+            } catch (Exception e) {
+                log.debug("Failed to load configuration from filesystem path: {}", configPath, e);
+            }
+        }
+        return inputStream;
     }
 
     private static List<String> initConfigNameList() {
