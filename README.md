@@ -1,8 +1,8 @@
 ![easy-push](images/logo.png)
 
-> 多场景信息推送解决方案，只需一行代码即可发送消息到钉钉群、腾讯云短信、阿里云短信等。
+> 只需一行代码即可发送消息到钉钉群、腾讯云短信、阿里云短信等。
 
-一行代码实现发送消息到钉钉群
+一行代码发送消息到钉钉群
 
 ```java
 	MessageContext messageContext = new SendMessageServiceImpl().singleSend(new DingTextMessage("abcdefghijk"));
