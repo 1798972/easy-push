@@ -7,7 +7,7 @@
     <parent>
         <groupId>cn.yang37</groupId>
         <artifactId>easy-push</artifactId>
-        <version>0.1.4</version>
+        <version>0.1.4.2</version>
     </parent>
 
     <artifactId>easy-push-test</artifactId>

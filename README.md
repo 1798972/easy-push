@@ -357,6 +357,22 @@ Boolean state = messageContext.getState();
 
 #### 3.1.2 Spring Boot
 
+##### 1.注入Bean
+
+```java
+@Component
+public class BeanConfig {
+
+    @Bean
+    public SendMessageService sendMessageService() {
+        return new SendMessageServiceImpl();
+    }
+
+}
+```
+
+##### 2.使用
+
 ```java
 @Service
 public class MessageSenderService {
@@ -375,7 +391,23 @@ public class MessageSenderService {
 
 
 
-## 4.写在最后
+## 4.配置加载
+
+加载优先级
+
+- 环境变量`easy.push.config.path`
+
+  ```bash
+  # eg: java启动脚本中传入
+  -Deasy.push.config.path=/path/to/easy-push.properties
+  ```
+
+- 当前classpath
+- 当前路径./
+
+
+
+## 5.写在最后
 
 easy-push是我临时起意的一个项目，但是我觉得这个思路是不错的。
 

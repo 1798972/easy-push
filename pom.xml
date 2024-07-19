@@ -6,7 +6,7 @@
 
     <groupId>cn.yang37</groupId>
     <artifactId>easy-push</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.4.2</version>
     <packaging>pom</packaging>
     <description>多场景信息推送解决方案</description>
     <name>${project.groupId}:${project.artifactId}</name>
@@ -46,7 +46,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <project.version>0.1.4</project.version>
+        <project.version>0.1.4.2</project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 

@@ -28,6 +28,7 @@ public class ConfigFactory {
     private volatile static ConfigFactory configFactory;
 
     public static final String DEFAULT_CONFIG_NAME = "easy-push";
+    public static final String CONFIG_PROPERTY = "easy.push.config.path";
 
     private final Properties configuration = init();
 
@@ -80,7 +81,7 @@ public class ConfigFactory {
         }
 
         if (ObjectUtils.isEmpty(config)) {
-            log.error("No configuration file found in the provided paths.");
+            log.error("No configuration file found in the provided paths: {}", configList);
             throw new ConfigException("Error initializing configuration file!");
         }
 
@@ -88,19 +89,30 @@ public class ConfigFactory {
     }
 
     private static InputStream getConfigInputStream(String configPath) {
-        InputStream inputStream = ConfigFactory.class.getClassLoader().getResourceAsStream(configPath);
-        if (inputStream == null) {
+        InputStream inputStream = null;
+        try {
+            inputStream = Files.newInputStream(Paths.get(configPath));
+        } catch (Exception e) {
+            log.debug("Failed to load configuration from filesystem path: {}", configPath, e);
             try {
-                inputStream = Files.newInputStream(Paths.get(configPath));
-            } catch (Exception e) {
-                log.debug("Failed to load configuration from filesystem path: {}", configPath, e);
+                inputStream = ConfigFactory.class.getClassLoader().getResourceAsStream(configPath);
+            } catch (Exception ex) {
+                log.debug("Failed to load configuration from classpath: {}", configPath, ex);
             }
         }
+
         return inputStream;
     }
 
     private static List<String> initConfigNameList() {
         List<String> nameList = new LinkedList<>();
+
+        // 读取系统属性中的配置路径
+        String configPropertyPath = System.getProperty(CONFIG_PROPERTY);
+        log.debug("System property {}: {}", CONFIG_PROPERTY, configPropertyPath);
+        if (configPropertyPath != null) {
+            nameList.add(configPropertyPath);
+        }
 
         final String classPath = "easy-push";
         final String currentDirectory = "./";
@@ -112,6 +124,8 @@ public class ConfigFactory {
         nameList.add(currentDirectory + ConfigFactory.DEFAULT_CONFIG_NAME + ConfigConstant.PROPERTIES);
         nameList.add(currentDirectory + ConfigFactory.DEFAULT_CONFIG_NAME + ConfigConstant.YML);
         nameList.add(currentDirectory + ConfigFactory.DEFAULT_CONFIG_NAME + ConfigConstant.YAML);
+
+        log.debug("Initialized config name list: {}", nameList);
 
         return nameList;
     }
@@ -136,7 +150,7 @@ public class ConfigFactory {
 
     public String getDefaultConfigValue(String prefix, String key, String defValue) {
         String configValue = getDefaultConfigValue(prefix, key);
-        return StringUtils.isAllEmpty(configValue) ? defValue : configValue;
+        return StringUtils.isEmpty(configValue) ? defValue : configValue;
     }
 
     public Properties getProperties(String prefix) {
