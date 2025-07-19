@@ -2,7 +2,7 @@ package cn.yang37.chain.node.def;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapter;
 import cn.yang37.entity.context.MessageContext;
-import cn.yang37.util.GsonUtils;
+import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +22,14 @@ public class DefaultInitNode extends MessageNodeAdapter {
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) {
         if (true) {
-            log.info("====> [singleSend] chain begin: {}", GsonUtils.toJson(messageContext));
+            log.info("====> [singleSend] chain begin: {}", JSON.toJSONString(messageContext));
         }
         return messageContext;
     }
 
     @Override
     public List<MessageContext> nodeMultipleSend(List<MessageContext> messageContextList) {
-        log.debug("multipleSend,messageListSize[{}],chain begin: {}", messageContextList.size(), GsonUtils.toJson(messageContextList));
+        log.debug("multipleSend,messageListSize[{}],chain begin: {}", messageContextList.size(), JSON.toJSONString(messageContextList));
         return messageContextList;
     }
 }

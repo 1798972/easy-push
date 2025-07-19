@@ -1,7 +1,10 @@
 package cn.yang37.service.impl;
 
 
-import cn.yang37.factory.MessageChainFactory;
+import cn.yang37.annotation.MessageChain;
+import cn.yang37.annotation.MessageScene;
+import cn.yang37.chain.impl.MessageChainDing;
+import cn.yang37.enums.MessageSceneType;
 import cn.yang37.service.AbstractMessageService;
 
 /**
@@ -11,10 +14,7 @@ import cn.yang37.service.AbstractMessageService;
  * @date: 2023/1/12 15:13
  * @version: 1.0
  */
+@MessageScene(MessageSceneType.DING)
+@MessageChain(MessageChainDing.class)
 public class DingTextMessageServiceImpl extends AbstractMessageService {
-
-    public DingTextMessageServiceImpl() {
-        this.messageChain = MessageChainFactory.instance().getMessageChain(this.getClass());
-    }
-
 }

@@ -5,10 +5,11 @@ import cn.yang37.constant.AppConstant;
 import cn.yang37.constant.SmsTencentV3Constant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
-import cn.yang37.util.GsonUtils;
 import cn.yang37.util.HashUtils;
 import cn.yang37.util.HexUtils;
 import cn.yang37.util.SignUtils;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
@@ -37,7 +38,10 @@ public class SmsTencentV3SignNode extends MessageNodeAdapterSmsTencentV3 {
         String canonicalHeaders = String.format("%s%s\n%s%s\n", "content-type:", AppConstant.HTTP_HEADER_JSON, "host:", host);
 
         // 构建hashedRequestPayload
-        String requestBody = GsonUtils.toJsonUpperCamelCase(messageContext.getMessage());
+        String requestBody = JSON.toJSONString(
+                messageContext.getMessage(), JSONWriter.Feature.PrettyFormat
+
+        );
         String hashedRequestPayload = HashUtils.sha256HexLower(requestBody);
         log.debug("requestBody:\n{}", requestBody);
         log.debug("hashedRequestPayload:\n{}", hashedRequestPayload);

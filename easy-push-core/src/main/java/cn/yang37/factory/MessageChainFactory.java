@@ -1,72 +1,66 @@
 package cn.yang37.factory;
 
 import cn.yang37.chain.MessageChain;
-import cn.yang37.chain.template.MessageChainDing;
-import cn.yang37.chain.template.MessageChainSmsAli;
-import cn.yang37.chain.template.MessageChainSmsTencentV3;
-import cn.yang37.chain.template.MessageChainVxTestAccountMessage;
-import cn.yang37.service.AbstractMessageService;
-import cn.yang37.service.impl.DingTextMessageServiceImpl;
-import cn.yang37.service.impl.SmsAliMessageServiceImpl;
-import cn.yang37.service.impl.SmsTencentV3MessageServiceImpl;
-import cn.yang37.service.impl.VxTestAccountMessageServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.reflections.Reflections;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @description:
- * @class: NodeFactory
- * @author: yang37z@qq.com
- * @date: 2023/4/13 0:19
- * @version: 1.0
- */
+@Slf4j
 public class MessageChainFactory {
 
-    private volatile static MessageChainFactory messageChainFactory;
+    /**
+     * 职责链实现类包路径
+     */
+    private static final String PACKAGE_MESSAGE_CHAIN = "cn.yang37.chain.impl";
 
+    /**
+     * 职责链对象池
+     */
     private final Map<Class<? extends MessageChain>, MessageChain> clazz4Chain = new ConcurrentHashMap<>();
 
-    private final Map<Class<? extends AbstractMessageService>, MessageChain> serviceClazz4Chain = new ConcurrentHashMap<>();
-
-
-    /*
-    映射chainClass到实例
-     */ {
-        clazz4Chain.put(MessageChainDing.class, new MessageChainDing());
-        clazz4Chain.put(MessageChainSmsTencentV3.class, new MessageChainSmsTencentV3());
-        clazz4Chain.put(MessageChainSmsAli.class, new MessageChainSmsAli());
-        clazz4Chain.put(MessageChainVxTestAccountMessage.class, new MessageChainVxTestAccountMessage());
-    }
-
-    /*
-    映射service到chain
-     */ {
-        serviceClazz4Chain.put(DingTextMessageServiceImpl.class, getMessageChainByClass(MessageChainDing.class));
-        serviceClazz4Chain.put(SmsTencentV3MessageServiceImpl.class, getMessageChainByClass(MessageChainSmsTencentV3.class));
-        serviceClazz4Chain.put(SmsAliMessageServiceImpl.class, getMessageChainByClass(MessageChainSmsAli.class));
-        serviceClazz4Chain.put(VxTestAccountMessageServiceImpl.class, getMessageChainByClass(MessageChainVxTestAccountMessage.class));
-    }
-
     private MessageChainFactory() {
+        registerChains();
+    }
+
+    /**
+     * 自动扫描并注册所有 MessageChain 实现（template 包及子包）
+     */
+    private void registerChains() {
+        Reflections reflections = new Reflections(PACKAGE_MESSAGE_CHAIN);
+        Set<Class<? extends MessageChain>> chainClasses = reflections.getSubTypesOf(MessageChain.class);
+        for (Class<? extends MessageChain> clazz : chainClasses) {
+            try {
+                MessageChain chain = clazz.getDeclaredConstructor().newInstance();
+                clazz4Chain.put(clazz, chain);
+                log.info("[对象池初始化][MessageChain][clazz -> MessageChain] 初始化成功,{} -> @{}", clazz, System.identityHashCode(chain));
+            } catch (Exception e) {
+                log.info("[对象池初始化][MessageChain] 初始化失败,class: {}", clazz, e);
+            }
+        }
+    }
+
+    private static class Holder {
+        private static final MessageChainFactory INSTANCE = new MessageChainFactory();
     }
 
     public static MessageChainFactory instance() {
-        if (messageChainFactory == null) {
-            synchronized (MessageChainFactory.class) {
-                if (messageChainFactory == null) {
-                    messageChainFactory = new MessageChainFactory();
-                }
-            }
-        }
-        return messageChainFactory;
+        return Holder.INSTANCE;
     }
 
-    public MessageChain getMessageChainByClass(Class<? extends MessageChain> clazz) {
+    /**
+     * 获取已注册的 chain
+     */
+    public MessageChain getMessageChain(Class<? extends MessageChain> clazz) {
         return clazz4Chain.get(clazz);
     }
 
-    public MessageChain getMessageChain(Class<? extends AbstractMessageService> messageClazz) {
-        return serviceClazz4Chain.get(messageClazz);
+    /**
+     * 可支持动态注册
+     */
+    public void registerChain(Class<? extends MessageChain> clazz, MessageChain chain) {
+        clazz4Chain.put(clazz, chain);
     }
 }

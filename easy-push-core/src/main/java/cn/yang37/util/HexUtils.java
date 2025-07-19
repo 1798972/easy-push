@@ -1,6 +1,6 @@
 package cn.yang37.util;
 
-import org.bouncycastle.util.encoders.Hex;
+import org.apache.commons.codec.binary.Hex;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -12,34 +12,30 @@ import java.util.Locale;
  * @class: HexUtils
  * @author: yang37z@qq.com
  * @date: 2022/7/1 18:35
- * @version: 1.0
+ * @version: 2.0 (commons-codec)
  */
 public class HexUtils {
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    /**
-     * ==========================  byte ================================
-     **/
+    /** ==========================  byte ================================ **/
     public static String byteArr2Str(byte[] byteArr) {
         return new String(byteArr, DEFAULT_CHARSET);
     }
 
     public static String byteArr2Base64(byte[] byteArr) {
-        return new String(Base64.getEncoder().encode(byteArr));
+        return Base64.getEncoder().encodeToString(byteArr);
     }
 
     public static String byteArr2Hex(byte[] byteArr) {
-        return Hex.toHexString(byteArr).toUpperCase(Locale.ROOT);
+        return Hex.encodeHexString(byteArr).toUpperCase(Locale.ROOT);
     }
 
     public static String byteArr2HexLower(byte[] byteArr) {
-        return Hex.toHexString(byteArr).toLowerCase(Locale.ROOT);
+        return Hex.encodeHexString(byteArr).toLowerCase(Locale.ROOT);
     }
 
-    /**
-     * ==========================  str ================================
-     **/
+    /** ==========================  str ================================ **/
     public static byte[] str2ByteArr(String str) {
         return str.getBytes(DEFAULT_CHARSET);
     }
@@ -49,18 +45,20 @@ public class HexUtils {
     }
 
     public static String str2Hex(String str) {
-        return byteArr2Hex(str2ByteArr(str)).toUpperCase(Locale.ROOT);
+        return byteArr2Hex(str2ByteArr(str));
     }
 
     public static String str2HexLower(String str) {
         return byteArr2HexLower(str2ByteArr(str));
     }
 
-    /**
-     * ==========================  hex ================================
-     **/
+    /** ==========================  hex ================================ **/
     public static byte[] hex2ByteArr(String hex) {
-        return Hex.decode(str2ByteArr(hex));
+        try {
+            return Hex.decodeHex(hex);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Hex decode error: " + hex, e);
+        }
     }
 
     public static String hex2Base64(String hex) {
@@ -71,11 +69,9 @@ public class HexUtils {
         return byteArr2Str(hex2ByteArr(hex));
     }
 
-    /**
-     * ==========================  base64 ================================
-     **/
+    /** ==========================  base64 ================================ **/
     public static byte[] base642ByteArr(String base64) {
-        return Base64.getDecoder().decode(str2ByteArr(base64));
+        return Base64.getDecoder().decode(base64);
     }
 
     public static String base642Str(String base64) {
@@ -86,7 +82,7 @@ public class HexUtils {
         return byteArr2Hex(base642ByteArr(base64));
     }
 
-    public static String base642HexLowe(String base64) {
+    public static String base642HexLower(String base64) {
         return byteArr2HexLower(base642ByteArr(base64));
     }
 

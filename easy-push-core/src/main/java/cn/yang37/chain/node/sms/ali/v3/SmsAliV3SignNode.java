@@ -5,9 +5,10 @@ import cn.yang37.constant.SmsAliV3Constant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
 import cn.yang37.entity.message.SmsAliV3Message;
-import cn.yang37.util.GsonUtils;
 import cn.yang37.util.HashUtils;
 import cn.yang37.util.SignUtils;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.UnsupportedEncodingException;
@@ -34,11 +35,12 @@ public class SmsAliV3SignNode extends MessageNodeAdapterSmsAli {
     public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
         SmsAliV3Message message = (SmsAliV3Message) messageContext.getMessage();
         // 请求体
-        String requestPayload = GsonUtils.toJson(message);
+        String requestPayload = JSON.toJSONString(message);
         String hashedRequestPayload = HashUtils.sha256HexLower(requestPayload);
         log.debug("requestPayload: {},hashedRequestPayload: {}", requestPayload, hashedRequestPayload);
 
-        Map<String, String> paramMap = GsonUtils.toMap(requestPayload);
+        Map<String, String> paramMap = JSON.parseObject(requestPayload, new TypeReference<Map<String, String>>() {
+        });
         // 填充信息
         ThreadContext.putContext(SmsAliV3Constant.AUTHORIZATION, parseAuthorization(paramMap, hashedRequestPayload));
         ThreadContext.putContext(SmsAliV3Constant.HTTP_REQUEST_PARAM, paramMap);
@@ -64,7 +66,7 @@ public class SmsAliV3SignNode extends MessageNodeAdapterSmsAli {
                 .stream()
                 .map(e -> e.getKey() + "=" + e.getValue())
                 .collect(Collectors.joining("&"));
-        log.debug("paramMap: {},change: {}", GsonUtils.toJson(treeMap), collect);
+        log.debug("paramMap: {},change: {}", JSON.toJSONString(treeMap), collect);
         return collect;
     }
 

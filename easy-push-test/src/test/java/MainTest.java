@@ -4,7 +4,7 @@ import cn.yang37.entity.message.DingTextMessage;
 import cn.yang37.entity.message.SmsAliV3Message;
 import cn.yang37.entity.message.SmsTencentV3Message;
 import cn.yang37.entity.message.VxTestAccountMessage;
-import cn.yang37.util.GsonUtils;
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -55,7 +55,7 @@ class MainTest {
                 .build();
 
         MessageContext messageContext = new SendMessageServiceImpl().singleSend(smsAliV3Message);
-        log.info("messageContext: {}", GsonUtils.toJson(messageContext));
+        log.info("messageContext: {}", JSON.toJSONString(messageContext));
         log.info("发送结果: {}", messageContext.getState());
     }
 
@@ -72,7 +72,7 @@ class MainTest {
                 .build();
 
         MessageContext messageContext = new SendMessageServiceImpl().singleSend(vxTestAccountMessage);
-        log.info("messageContext: {}", GsonUtils.toJson(messageContext));
+        log.info("messageContext: {}", JSON.toJSONString(messageContext));
         log.info("发送结果: {}", messageContext.getState());
     }
 }

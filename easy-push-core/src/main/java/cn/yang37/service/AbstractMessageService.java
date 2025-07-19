@@ -20,18 +20,14 @@ public abstract class AbstractMessageService {
      */
     protected MessageChain messageChain;
 
-    public MessageChain getMessageChain() {
-        return messageChain;
-    }
-
     /**
      * 根据信息上下文对象发送信息
      *
      * @param messageContext .
      * @return .
      */
-    public MessageContext singleSend(MessageContext messageContext) throws Exception {
-        return getMessageChain().execute(messageContext);
+    public MessageContext singleSend(MessageContext messageContext) {
+        return messageChain.execute(messageContext);
     }
 
     /**

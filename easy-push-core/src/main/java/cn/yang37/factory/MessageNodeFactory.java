@@ -1,10 +1,10 @@
 package cn.yang37.factory;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapter;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @description:
@@ -13,38 +13,29 @@ import java.util.Map;
  * @date: 2023/4/13 0:19
  * @version: 1.0
  */
+@Slf4j
 public class MessageNodeFactory {
 
-    private volatile static MessageNodeFactory messageNodeFactory;
-
-    private final Map<Class<? extends MessageNodeAdapter>, MessageNodeAdapter> nodePool = new HashMap<>();
+    private final Map<Class<? extends MessageNodeAdapter>, MessageNodeAdapter> nodePool = new ConcurrentHashMap<>();
 
     private MessageNodeFactory() {
     }
 
+    private static class Holder {
+        private static final MessageNodeFactory INSTANCE = new MessageNodeFactory();
+    }
+
     public static MessageNodeFactory instance() {
-        if (messageNodeFactory == null) {
-            synchronized (MessageNodeFactory.class) {
-                if (messageNodeFactory == null) {
-                    messageNodeFactory = new MessageNodeFactory();
-                }
+        return Holder.INSTANCE;
+    }
+
+    public MessageNodeAdapter getMessageNode(Class<? extends MessageNodeAdapter> clazz) {
+        return nodePool.computeIfAbsent(clazz, key -> {
+            try {
+                return key.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to instantiate MessageNodeAdapter: " + clazz.getName(), e);
             }
-        }
-        return messageNodeFactory;
+        });
     }
-
-    public MessageNodeAdapter getMessageNode(Class<? extends MessageNodeAdapter> implClass) throws IllegalAccessException, InstantiationException {
-        // 默认从缓存池获取
-        MessageNodeAdapter messageNode = nodePool.get(implClass);
-
-        // 没有则新建,并放入缓存池
-        if (ObjectUtils.isEmpty(messageNode)) {
-            MessageNodeAdapter newMessageNode = implClass.newInstance();
-            nodePool.put(implClass, newMessageNode);
-            return newMessageNode;
-        }
-
-        return messageNode;
-    }
-
 }

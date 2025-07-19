@@ -4,18 +4,17 @@ import cn.yang37.chain.node.adapter.MessageNodeAdapterDing;
 import cn.yang37.constant.DingConstant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
-import cn.yang37.util.GsonUtils;
 import cn.yang37.util.SignUtils;
 import cn.zhxu.okhttps.HttpResult;
 import cn.zhxu.okhttps.OkHttps;
-import org.apache.commons.configuration.ConfigurationException;
+import com.alibaba.fastjson2.JSON;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.cxf.common.util.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -33,7 +32,7 @@ public class DingTextSendNode extends MessageNodeAdapterDing {
     private static final Logger log = LoggerFactory.getLogger(DingTextSendNode.class);
 
     @Override
-    public MessageContext nodeSingleSend(MessageContext messageContext) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, ConfigurationException {
+    public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
         String timestamp = messageContext.getTimestamp();
 
         String baseUrl = configProperties.getBaseUrl();
@@ -42,10 +41,10 @@ public class DingTextSendNode extends MessageNodeAdapterDing {
         log.debug("[config] baseUrl: {} ,ak: {},sk: {}", baseUrl, accessToken, secret);
 
         String dingUrl = formatDingSendUrl(baseUrl, accessToken, secret, timestamp);
-        log.info("http url: {}", UrlUtils.urlDecode(dingUrl));
+        log.info("http url: {}", URLDecoder.decode(dingUrl, StandardCharsets.UTF_8.name()));
 
         Object bodyPara = ThreadContext.getContext(DingConstant.DING_REQUEST_BODY);
-        log.info("http request body: {}", GsonUtils.toJson(bodyPara));
+        log.info("http request body: {}", JSON.toJSONString(bodyPara));
 
         HttpResult httpResult = OkHttps.sync(dingUrl)
                 .setBodyPara(bodyPara)

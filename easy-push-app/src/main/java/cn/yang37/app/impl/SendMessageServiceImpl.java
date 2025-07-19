@@ -7,9 +7,9 @@ import cn.yang37.entity.message.Message;
 import cn.yang37.exception.ExecuteException;
 import cn.yang37.factory.MessageServiceFactory;
 import cn.yang37.service.AbstractMessageService;
-import cn.yang37.util.GsonUtils;
 import cn.yang37.util.MessageProvider;
 import cn.yang37.util.TraceUtils;
+import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -34,7 +34,7 @@ public class SendMessageServiceImpl extends MessageProvider implements SendMessa
 
             // 格式化日志信息
             formatTraceId(messageContext);
-            log.debug("message: {},messageContext: {}", GsonUtils.toJson(message), GsonUtils.toJson(messageContext));
+            log.debug("message: {},messageContext: {}", JSON.toJSONString(message), JSON.toJSONString(messageContext));
 
             // 解析MessageService对象
             AbstractMessageService messageService = MessageServiceFactory.instance().getMessageService(messageContext.getMessageSceneType());

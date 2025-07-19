@@ -2,8 +2,8 @@ package cn.yang37.chain.node.def;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapter;
 import cn.yang37.entity.context.MessageContext;
-import cn.yang37.util.GsonUtils;
 import cn.yang37.util.TraceUtils;
+import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class DefaultEndNode extends MessageNodeAdapter {
         if (true) {
             Boolean state = messageContext.getState();
             log.info("(MessageContext.state) result-> {}", state);
-            log.info("<==== [singleSend] chain end: {}", GsonUtils.toJson(messageContext));
+            log.info("<==== [singleSend] chain end: {}", JSON.toJSONString(messageContext));
             TraceUtils.traceEnd();
         }
         return messageContext;

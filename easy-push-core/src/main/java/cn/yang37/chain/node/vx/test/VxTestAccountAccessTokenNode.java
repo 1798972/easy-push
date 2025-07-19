@@ -5,6 +5,7 @@ import cn.yang37.constant.VxTestAccountConstant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
 import cn.yang37.util.HttpUtils;
+import cn.yang37.util.JsonUtils;
 import cn.zhxu.okhttps.HttpResult;
 import cn.zhxu.okhttps.OkHttps;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +38,8 @@ public class VxTestAccountAccessTokenNode extends MessageNodeAdapterVxTestAccoun
 
         if (httpResult.isSuccessful()) {
             HttpResult.Body body = httpResult.getBody().cache();
-            String accessToken = HttpUtils.getValue("access_token", body, String.class);
-            Double expiresIn = HttpUtils.getValue("expires_in", body, Double.class);
+            String accessToken = JsonUtils.getValue("access_token", body, String.class);
+            Double expiresIn = JsonUtils.getValue("expires_in", body, Double.class);
 
             ThreadContext.putContext(VxTestAccountConstant.GetAccessToken.ACCESS_TOKEN, accessToken);
             ThreadContext.putContext(VxTestAccountConstant.GetAccessToken.EXPIRES_IN, expiresIn);

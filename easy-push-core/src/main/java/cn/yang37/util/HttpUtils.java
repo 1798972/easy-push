@@ -1,10 +1,6 @@
 package cn.yang37.util;
 
-import cn.zhxu.okhttps.HttpResult;
 import lombok.extern.slf4j.Slf4j;
-import ognl.Ognl;
-
-import java.util.Map;
 
 /**
  * @description:
@@ -16,16 +12,10 @@ import java.util.Map;
 @Slf4j
 public class HttpUtils {
 
-    public static <T> T getValue(String expression, HttpResult.Body body, Class<T> resultType) {
-        Map<String, ?> map = GsonUtils.toMap(body.toString());
-        return (T) OgnlUtils.wrap(value -> Ognl.getValue(expression, value, resultType)).apply(map);
-    }
-
     public static String formatSendUrl(String defUrl, String realUrl, String path) {
         if (org.apache.commons.lang3.StringUtils.isEmpty(realUrl)) {
             return defUrl + path;
         }
-
         return realUrl + path;
     }
 }

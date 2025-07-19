@@ -1,7 +1,7 @@
 package cn.yang37.util;
 
 import cn.yang37.entity.context.ThreadContext;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 
 import java.util.UUID;
@@ -81,7 +81,7 @@ public class TraceUtils {
         String appendId = TraceUtils.generateTraceId();
 
         // 变更后
-        String after = StringUtils.isEmpty(nowTraceId) ? appendId : nowTraceId + SPLIT_APPEND + appendId;
+        String after = org.apache.commons.lang3.StringUtils.isEmpty(nowTraceId) ? appendId : nowTraceId + SPLIT_APPEND + appendId;
         TraceUtils.resetTraceId(after);
     }
 

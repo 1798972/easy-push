@@ -5,15 +5,17 @@ import cn.yang37.constant.VxTestAccountConstant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
 import cn.yang37.entity.message.VxTestAccountMessage;
-import cn.yang37.util.GsonUtils;
 import cn.yang37.util.HttpUtils;
+import cn.yang37.util.JsonUtils;
 import cn.zhxu.okhttps.HttpResult;
 import cn.zhxu.okhttps.OkHttps;
 import cn.zhxu.okhttps.SHttpTask;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.cxf.common.util.UrlUtils;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @description:
@@ -29,7 +31,7 @@ public class VxTestAccountSendNode extends MessageNodeAdapterVxTestAccountMessag
     public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
         VxTestAccountMessage vxTestAccountMessage = (VxTestAccountMessage) messageContext.getMessage();
         String accessToken = ThreadContext.getContext(VxTestAccountConstant.GetAccessToken.ACCESS_TOKEN, String.class);
-        String reqData = GsonUtils.toJsonSnakeCase(vxTestAccountMessage);
+        String reqData = JsonUtils.toSnakeCaseJsonString(vxTestAccountMessage);
 
         // 构建请求
         String sendUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, configProperties.getBaseUrl(), VxTestAccountConstant.PATH);
@@ -38,7 +40,7 @@ public class VxTestAccountSendNode extends MessageNodeAdapterVxTestAccountMessag
                 .setBodyPara(reqData)
                 .bodyType(OkHttps.JSON);
 
-        log.info("http url: {}", UrlUtils.urlDecode(httpTask.getUrl()));
+        log.info("http url: {}", URLDecoder.decode(httpTask.getUrl(), StandardCharsets.UTF_8.name()));
         log.info("http request body: {}", reqData);
 
         HttpResult httpResult = httpTask.post();
@@ -48,8 +50,8 @@ public class VxTestAccountSendNode extends MessageNodeAdapterVxTestAccountMessag
         messageContext.setResponse(body.toString());
 
         if (httpResult.isSuccessful()) {
-            Integer errcode = HttpUtils.getValue("errcode", body, Integer.class);
-            messageContext.setState(0 == errcode);
+            Integer errcode = JsonUtils.getValue("$.errcode", body, Integer.class);
+            messageContext.setState(Objects.equals(errcode, 0));
         }
 
         return messageContext;

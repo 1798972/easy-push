@@ -7,11 +7,11 @@
     <parent>
         <groupId>cn.yang37</groupId>
         <artifactId>easy-push</artifactId>
-        <version>0.1.4.2</version>
+        <version>0.1.5</version>
     </parent>
 
     <artifactId>easy-push-test</artifactId>
-    <version>${project.version}</version>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -37,9 +37,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.78</version>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
         </dependency>
     </dependencies>
 

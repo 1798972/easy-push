@@ -4,13 +4,14 @@ import cn.yang37.chain.node.adapter.MessageNodeAdapterSmsAli;
 import cn.yang37.constant.SmsAliV3Constant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
-import cn.yang37.util.GsonUtils;
-import cn.yang37.util.OgnlUtils;
 import cn.zhxu.okhttps.HttpResult;
 import cn.zhxu.okhttps.OkHttps;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONPath;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.cxf.common.util.UrlUtils;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class SmsAliV3SendNode extends MessageNodeAdapterSmsAli {
         headerList.put(SmsAliV3Constant.X_ACS_VERSION, xAcsVersion);
         headerList.put(SmsAliV3Constant.AUTHORIZATION, authorization);
 
-        log.info("http url: {}", UrlUtils.urlDecode(url));
+        log.info("http url: {}", URLDecoder.decode(url, StandardCharsets.UTF_8.name()));
         log.info("http request body: {}", requestParam);
 
         HttpResult httpResult = OkHttps
@@ -69,7 +70,7 @@ public class SmsAliV3SendNode extends MessageNodeAdapterSmsAli {
 
         // 构建返回
         if (200 == status) {
-            String code = (String) OgnlUtils.getValue("Code", GsonUtils.toMap(responseBodyStr));
+            String code = String.valueOf(JSONPath.eval(JSON.parse(responseBodyStr), "$.Code"));
             messageContext.setState(SmsAliV3Constant.Code.OK.equals(code));
         } else {
             messageContext.setState(false);

@@ -7,11 +7,10 @@
     <parent>
         <groupId>cn.yang37</groupId>
         <artifactId>easy-push</artifactId>
-        <version>0.1.4.2</version>
+        <version>0.1.5</version>
     </parent>
 
     <artifactId>easy-push-core</artifactId>
-    <version>${project.version}</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -37,60 +36,24 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.zhxu</groupId>
-            <artifactId>okhttps-gson</artifactId>
-        </dependency>
-
-        <!-- commons-pool2 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!-- BC库 START -->
         <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15to18</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15to18</artifactId>
-        </dependency>
-        <!-- BC库 END -->
-
-        <!-- gson -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
 
-        <!-- 日志相关 - Start -->
-        <!-- log4j2: 建议2.6以上-->
+        <!-- 日志-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
         </dependency>
-        <!-- log4j2和slf4j桥接依赖-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
         </dependency>
-        <!-- 日志相关 - End -->
 
         <!--junit5-->
         <dependency>
@@ -104,20 +67,24 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ognl</groupId>
-            <artifactId>ognl</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.zhxu</groupId>
+            <artifactId>okhttps-fastjson2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+        </dependency>
     </dependencies>
 
 

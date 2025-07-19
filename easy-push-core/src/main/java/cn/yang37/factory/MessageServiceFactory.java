@@ -1,81 +1,83 @@
 package cn.yang37.factory;
 
-
+import cn.yang37.annotation.MessageChain;
+import cn.yang37.annotation.MessageScene;
 import cn.yang37.enums.MessageSceneType;
 import cn.yang37.service.AbstractMessageService;
-import cn.yang37.service.impl.DingTextMessageServiceImpl;
-import cn.yang37.service.impl.SmsAliMessageServiceImpl;
-import cn.yang37.service.impl.SmsTencentV3MessageServiceImpl;
-import cn.yang37.service.impl.VxTestAccountMessageServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.reflections.Reflections;
 
-import java.util.HashMap;
+import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @description: 消息服务工厂
- * @class: MessageServiceFactory
- * @author: yang37z@qq.com
- * @date: 2023/1/12 15:11
- * @version: 1.0
- */
+@Slf4j
 public class MessageServiceFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(MessageServiceFactory.class);
+    private static final String PACKAGE_PATH = "cn.yang37.service.impl";
 
-    private static volatile MessageServiceFactory messageServiceFactory;
-
-    /**
-     * class-service
-     */
-    private final Map<Class<? extends AbstractMessageService>, AbstractMessageService> class4ServiceMap = new HashMap<>();
+    private static final String NAME_DI_FILED = "messageChain";
 
     /**
-     * scene-service
+     * MessageSceneType -> MessageService实例
      */
-    protected final Map<MessageSceneType, AbstractMessageService> scene4ServicePool = new ConcurrentHashMap<>();
-
-    /*
-     sceneClass-service
-     */ {
-        class4ServiceMap.put(DingTextMessageServiceImpl.class, new DingTextMessageServiceImpl());
-        class4ServiceMap.put(SmsTencentV3MessageServiceImpl.class, new SmsTencentV3MessageServiceImpl());
-        class4ServiceMap.put(SmsAliMessageServiceImpl.class, new SmsAliMessageServiceImpl());
-        class4ServiceMap.put(VxTestAccountMessageServiceImpl.class, new VxTestAccountMessageServiceImpl());
-    }
-
-    /*
-     sceneClass-service
-     */ {
-        scene4ServicePool.put(MessageSceneType.DING, getMessageService(DingTextMessageServiceImpl.class));
-        scene4ServicePool.put(MessageSceneType.SMS_TENCENT_V3, getMessageService(SmsTencentV3MessageServiceImpl.class));
-        scene4ServicePool.put(MessageSceneType.SMS_ALI_V3, getMessageService(SmsAliMessageServiceImpl.class));
-        scene4ServicePool.put(MessageSceneType.VX_TEST_ACCOUNT, getMessageService(VxTestAccountMessageServiceImpl.class));
-    }
+    private final Map<MessageSceneType, AbstractMessageService> scene4ServicePool = new ConcurrentHashMap<>();
 
     private MessageServiceFactory() {
+        // 自动注册
+        registerAnnotatedServices();
     }
 
-    public static MessageServiceFactory instance() {
-        if (messageServiceFactory == null) {
-            synchronized (MessageServiceFactory.class) {
-                if (messageServiceFactory == null) {
-                    messageServiceFactory = new MessageServiceFactory();
+    /**
+     * 自动扫描指定包下所有带注解的 Service 实现类
+     */
+    private void registerAnnotatedServices() {
+        // 扫描服务类实例
+        Set<Class<? extends AbstractMessageService>> serviceClasses = new Reflections(PACKAGE_PATH).getSubTypesOf(AbstractMessageService.class);
+
+        for (Class<? extends AbstractMessageService> clazz : serviceClasses) {
+            MessageChain annotationChain = clazz.getAnnotation(MessageChain.class);
+            MessageScene annotationScene = clazz.getAnnotation(MessageScene.class);
+            if (annotationChain != null) {
+                try {
+                    // messageService实例化
+                    AbstractMessageService service = clazz.getDeclaredConstructor().newInstance();
+                    // service绑定chain对象
+                    Class<? extends cn.yang37.chain.MessageChain> clazz4Chain = annotationChain.value();
+                    // 获取chain实例
+                    cn.yang37.chain.MessageChain chain = MessageChainFactory.instance().getMessageChain(clazz4Chain);
+                    // 指定绑定
+                    Field chainField = AbstractMessageService.class.getDeclaredField(NAME_DI_FILED);
+                    chainField.setAccessible(true);
+                    chainField.set(service, chain);
+                    log.info("[对象依赖注入][MessageService][MessageService -> MessageChain] 注入成功,{} -> @{}", service.getClass().getName(), System.identityHashCode(chain));
+                    // 根据场景初始化service
+                    if (annotationScene != null) {
+                        MessageSceneType sceneType = annotationScene.value();
+                        scene4ServicePool.put(sceneType, service);
+                        log.info("[对象池初始化][MessageService][MessageSceneType -> MessageService] 初始化成功,{} -> {}", sceneType, clazz);
+                    }
+                } catch (Exception e) {
+                    log.error("[对象池初始化][MessageSceneType -> MessageService] 初始化失败,class: {}", clazz, e);
                 }
             }
         }
-        return messageServiceFactory;
     }
 
-    private AbstractMessageService getMessageService(Class<? extends AbstractMessageService> messageServiceClazz) {
-        return class4ServiceMap.get(messageServiceClazz);
+    private static class Holder {
+        private static final MessageServiceFactory INSTANCE = new MessageServiceFactory();
+    }
+
+    public static MessageServiceFactory instance() {
+        return Holder.INSTANCE;
     }
 
     public AbstractMessageService getMessageService(MessageSceneType messageSceneType) {
         return scene4ServicePool.get(messageSceneType);
     }
 
-
+    public void registerScene(MessageSceneType type, AbstractMessageService instance) {
+        scene4ServicePool.put(type, instance);
+    }
 }

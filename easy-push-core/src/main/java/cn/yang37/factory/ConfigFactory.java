@@ -1,12 +1,9 @@
 package cn.yang37.factory;
 
-import cn.yang37.constant.ConfigConstant;
 import cn.yang37.exception.ConfigException;
 import cn.yang37.util.ConfigUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -14,152 +11,126 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-/**
- * @description:
- * @class: ConfigFactory
- * @autho: yang37z@qq.com
- * @date: 2024/3/2 20:58
- * @version: 1.0
- */
+@Slf4j
 public class ConfigFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigFactory.class);
+    private static final String ENV_CONFIG_PATH = "easy.push.config.path";
+    private static final String DEFAULT_BASE = "easy-push";
+    private static final String[] SUFFIXES = {".properties", ".yml", ".yaml"};
 
-    private volatile static ConfigFactory configFactory;
-
-    public static final String DEFAULT_CONFIG_NAME = "easy-push";
-    public static final String CONFIG_PROPERTY = "easy.push.config.path";
-
-    private final Properties configuration = init();
+    private final Properties config;
 
     private ConfigFactory() {
+        this.config = loadConfig();
+    }
+
+    private static class Holder {
+        private static final ConfigFactory INSTANCE = new ConfigFactory();
     }
 
     public static ConfigFactory instance() {
-        if (configFactory == null) {
-            synchronized (ConfigFactory.class) {
-                if (configFactory == null) {
-                    configFactory = new ConfigFactory();
-                }
-            }
-        }
-        return configFactory;
+        return Holder.INSTANCE;
     }
 
-    private static Properties init() {
-        Properties config = new Properties();
-
-        // 配置文件列表
-        List<String> configList = initConfigNameList();
-        int size = configList.size();
-
-        // 查找文件
-        for (int i = 0; i < size; i++) {
-            String configPath = configList.get(i);
-            log.debug("Attempting to load configuration from: {}", configPath);
-            try {
-                Properties tmpConfig = new Properties();
-                InputStream inputStream = getConfigInputStream(configPath);
-                if (inputStream != null) {
-                    if (configPath.endsWith(ConfigConstant.PROPERTIES)) {
-                        tmpConfig.load(inputStream);
-                    } else if (configPath.endsWith(ConfigConstant.YML) || configPath.endsWith(ConfigConstant.YAML)) {
-                        Yaml yaml = new Yaml();
-                        Map<String, Object> yamlMap = yaml.load(inputStream);
-                        tmpConfig.putAll(flattenYamlMap(yamlMap, null));
-                    }
-                    inputStream.close();
+    private Properties loadConfig() {
+        List<String> candidatePaths = buildCandidateList();
+        for (String path : candidatePaths) {
+            if (StringUtils.isBlank(path)) {
+                continue;
+            }
+            try (InputStream is = getInputStream(path)) {
+                if (is == null) {
+                    continue;
                 }
-                if (ObjectUtils.isNotEmpty(tmpConfig)) {
-                    config = tmpConfig;
-                    log.debug("Found the configuration file at: {}", configPath);
-                    break;
+                Properties prop = new Properties();
+                if (path.endsWith(".properties")) {
+                    prop.load(is);
+                } else if (path.endsWith(".yml") || path.endsWith(".yaml")) {
+                    Map<String, Object> yamlMap = new Yaml().load(is);
+                    if (yamlMap != null) {
+                        prop.putAll(flattenYamlMap(yamlMap, null));
+                    }
+                }
+                if (!prop.isEmpty()) {
+                    log.info("Loaded configuration from: {}", path);
+                    return prop;
                 }
             } catch (Exception e) {
-                log.error("Failed to load configuration from: {}", configPath, e);
+                log.warn("Failed to load config from {}: {}", path, e.getMessage());
             }
         }
-
-        if (ObjectUtils.isEmpty(config)) {
-            log.error("No configuration file found in the provided paths: {}", configList);
-            throw new ConfigException("Error initializing configuration file!");
-        }
-
-        return config;
+        log.error("No configuration file found in candidate paths: {}", candidatePaths);
+        throw new ConfigException("Error initializing configuration file!");
     }
 
-    private static InputStream getConfigInputStream(String configPath) {
-        InputStream inputStream = null;
+    private List<String> buildCandidateList() {
+        List<String> list = new ArrayList<>();
+        // 1. 环境变量指定优先
+        String sysPath = System.getProperty(ENV_CONFIG_PATH);
+        if (StringUtils.isNotBlank(sysPath)) {
+            list.add(sysPath);
+        }
+        // 2. classpath 和 3. 当前目录
+        for (String suffix : SUFFIXES) {
+            // classpath
+            list.add(DEFAULT_BASE + suffix);
+            // 当前目录
+            list.add("./" + DEFAULT_BASE + suffix);
+        }
+        return list;
+    }
+
+    /**
+     * 文件系统与 classpath 加载
+     */
+    private InputStream getInputStream(String path) {
+        // 先尝试文件系统
         try {
-            inputStream = Files.newInputStream(Paths.get(configPath));
-        } catch (Exception e) {
-            log.debug("Failed to load configuration from filesystem path: {}", configPath, e);
-            try {
-                inputStream = ConfigFactory.class.getClassLoader().getResourceAsStream(configPath);
-            } catch (Exception ex) {
-                log.debug("Failed to load configuration from classpath: {}", configPath, ex);
+            if (Files.exists(Paths.get(path))) {
+                return Files.newInputStream(Paths.get(path));
             }
+        } catch (Exception ignore) {
         }
-
-        return inputStream;
+        // 再尝试 classpath
+        try {
+            return ConfigFactory.class.getClassLoader().getResourceAsStream(path.startsWith("./") ? path.substring(2) : path);
+        } catch (Exception ignore) {
+        }
+        return null;
     }
 
-    private static List<String> initConfigNameList() {
-        List<String> nameList = new LinkedList<>();
-
-        // 读取系统属性中的配置路径
-        String configPropertyPath = System.getProperty(CONFIG_PROPERTY);
-        log.debug("System property {}: {}", CONFIG_PROPERTY, configPropertyPath);
-        if (configPropertyPath != null) {
-            nameList.add(configPropertyPath);
-        }
-
-        final String classPath = "easy-push";
-        final String currentDirectory = "./";
-
-        nameList.add(classPath + ConfigConstant.PROPERTIES);
-        nameList.add(classPath + ConfigConstant.YML);
-        nameList.add(classPath + ConfigConstant.YAML);
-
-        nameList.add(currentDirectory + ConfigFactory.DEFAULT_CONFIG_NAME + ConfigConstant.PROPERTIES);
-        nameList.add(currentDirectory + ConfigFactory.DEFAULT_CONFIG_NAME + ConfigConstant.YML);
-        nameList.add(currentDirectory + ConfigFactory.DEFAULT_CONFIG_NAME + ConfigConstant.YAML);
-
-        log.debug("Initialized config name list: {}", nameList);
-
-        return nameList;
-    }
-
-    private static Map<String, String> flattenYamlMap(Map<String, Object> map, String parentKey) {
-        Map<String, String> flatMap = new HashMap<>();
+    // YAML 扁平化
+    private Map<String, String> flattenYamlMap(Map<String, Object> map, String parentKey) {
+        Map<String, String> flat = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String key = parentKey == null ? entry.getKey() : parentKey + "." + entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof Map) {
-                flatMap.putAll(flattenYamlMap((Map<String, Object>) value, key));
-            } else {
-                flatMap.put(key, value.toString());
+            Object val = entry.getValue();
+            if (val instanceof Map) {
+                flat.putAll(flattenYamlMap((Map<String, Object>) val, key));
+            } else if (val != null) {
+                flat.put(key, val.toString());
             }
         }
-        return flatMap;
+        return flat;
     }
 
-    public String getDefaultConfigValue(String prefix, String key) {
-        return instance().configuration.getProperty(prefix + key);
+
+    public String getConfigValue(String prefix, String key) {
+        return config.getProperty(prefix + key);
     }
 
-    public String getDefaultConfigValue(String prefix, String key, String defValue) {
-        String configValue = getDefaultConfigValue(prefix, key);
-        return StringUtils.isEmpty(configValue) ? defValue : configValue;
+    public String getConfigValue(String prefix, String key, String defValue) {
+        String val = getConfigValue(prefix, key);
+        return StringUtils.isBlank(val) ? defValue : val;
     }
 
     public Properties getProperties(String prefix) {
         Properties props = new Properties();
-        for (String key : configuration.stringPropertyNames()) {
+        for (String key : config.stringPropertyNames()) {
             if (key.startsWith(prefix)) {
-                String propertyKey = key.substring(prefix.length());
-                propertyKey = StringUtils.stripStart(propertyKey, ".");
-                props.put(propertyKey, configuration.getProperty(key));
+                String pkey = key.substring(prefix.length());
+                pkey = StringUtils.stripStart(pkey, ".");
+                props.put(pkey, config.getProperty(key));
             }
         }
         return props;

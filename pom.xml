@@ -6,16 +6,21 @@
 
     <groupId>cn.yang37</groupId>
     <artifactId>easy-push</artifactId>
-    <version>0.1.4.2</version>
+    <version>0.1.5</version>
     <packaging>pom</packaging>
-    <description>多场景信息推送解决方案</description>
     <name>${project.groupId}:${project.artifactId}</name>
+    <description>多场景信息推送解决方案</description>
     <url>https://github.com/1798972/easy-push</url>
 
     <modules>
-        <module>easy-push-model</module>
-        <module>easy-push-core</module>
         <module>easy-push-app</module>
+        <module>easy-push-channel</module>
+        <module>easy-push-core</module>
+        <module>easy-push-dist</module>
+        <module>easy-push-model</module>
+        <module>easy-push-persistence</module>
+        <module>easy-push-samples</module>
+        <module>easy-push-spring-boot</module>
         <module>easy-push-test</module>
     </modules>
 
@@ -27,7 +32,6 @@
         </license>
     </licenses>
 
-    <!--开发者信息-->
     <developers>
         <developer>
             <name>yang37</name>
@@ -37,7 +41,6 @@
         </developer>
     </developers>
 
-    <!--项目在github或其它托管平台的地址-->
     <scm>
         <connection>https://github.com/1798972/easy-push.git</connection>
         <developerConnection>scm:git:ssh://github.com:1798972/easy-push.git</developerConnection>
@@ -45,175 +48,159 @@
     </scm>
 
     <properties>
+        <!-- Java & 项目版本 -->
         <java.version>1.8</java.version>
-        <project.version>0.1.4.2</project.version>
+        <easy-push.version>0.1.5</easy-push.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <version.org.apache.commons.commons-pool2>2.11.1</version.org.apache.commons.commons-pool2>
-        <version.com.google.code.gson.gson>2.10.1</version.com.google.code.gson.gson>
-        <version.org.apache.logging.log4j.log4j-core>2.20.0</version.org.apache.logging.log4j.log4j-core>
-        <version.org.apache.logging.log4j.log4j-slf4j-impl>2.20.0</version.org.apache.logging.log4j.log4j-slf4j-impl>
-        <version.org.junit.jupiter.junit-jupiter>5.9.2</version.org.junit.jupiter.junit-jupiter>
-        <version.org.bouncycastle.jdk15to18>1.71</version.org.bouncycastle.jdk15to18>
-        <version.org.apache.commons.commons-lang3>3.12.0</version.org.apache.commons.commons-lang3>
+        <!-- 依赖版本统一管理 -->
+        <commons-pool2.version>2.11.1</commons-pool2.version>
+        <log4j2.core.version>2.20.0</log4j2.core.version>
+        <log4j2.slf4j.version>2.20.0</log4j2.slf4j.version>
+        <junit.jupiter.version>5.9.2</junit.jupiter.version>
+        <bouncycastle.version>1.71</bouncycastle.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <javax.annotation.version>1.3.2</javax.annotation.version>
+        <cxf-core.version>3.4.5</cxf-core.version>
+        <lombok.version>1.18.22</lombok.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+        <fastjson2.version>2.0.51</fastjson2.version>
+        <okhttps-fastjson2.version>4.1.0</okhttps-fastjson2.version>
+
+        <!-- 插件版本统一管理 -->
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-gpg-plugin.version>1.0</maven-gpg-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.4.1</maven-javadoc-plugin.version>
     </properties>
 
     <dependencyManagement>
-
         <dependencies>
-
-            <dependency>
-                <groupId>cn.yang37</groupId>
-                <artifactId>easy-push-model</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.yang37</groupId>
-                <artifactId>easy-push-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
+            <!-- 项目内各模块 -->
             <dependency>
                 <groupId>cn.yang37</groupId>
                 <artifactId>easy-push-app</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>cn.yang37</groupId>
+                <artifactId>easy-push-channel</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.yang37</groupId>
+                <artifactId>easy-push-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.yang37</groupId>
+                <artifactId>easy-push-dist</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.yang37</groupId>
+                <artifactId>easy-push-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.yang37</groupId>
+                <artifactId>easy-push-persistence</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.yang37</groupId>
+                <artifactId>easy-push-samples</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.yang37</groupId>
+                <artifactId>easy-push-spring-boot</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.yang37</groupId>
                 <artifactId>easy-push-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>cn.zhxu</groupId>
-                <artifactId>okhttps-gson</artifactId>
-                <version>4.0.1</version>
-            </dependency>
-
-            <!-- commons-pool2 -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-pool2</artifactId>
-                <version>${version.org.apache.commons.commons-pool2}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-beanutils</groupId>
-                <artifactId>commons-beanutils</artifactId>
-                <version>1.8.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-configuration</groupId>
-                <artifactId>commons-configuration</artifactId>
-                <version>1.8</version>
-            </dependency>
-
+            <!-- 三方依赖 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>${version.org.apache.commons.commons-lang3}</version>
-            </dependency>
-
-
-            <!-- BC库 START -->
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15to18</artifactId>
-                <version>${version.org.bouncycastle.jdk15to18}</version>
+                <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15to18</artifactId>
-                <version>${version.org.bouncycastle.jdk15to18}</version>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.16.0</version>
             </dependency>
-            <!-- BC库 END -->
-
-            <!-- gson -->
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${version.com.google.code.gson.gson}</version>
-            </dependency>
-
-            <!-- 日志相关 - Start -->
-            <!-- log4j2: 建议2.6以上-->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>${version.org.apache.logging.log4j.log4j-core}</version>
+                <version>${log4j2.core.version}</version>
             </dependency>
-            <!-- log4j2和slf4j桥接依赖-->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
-                <version>${version.org.apache.logging.log4j.log4j-slf4j-impl}</version>
+                <version>${log4j2.slf4j.version}</version>
             </dependency>
-            <!-- 日志相关 - End -->
-
-            <!--junit5-->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
-                <version>${version.org.junit.jupiter.junit-jupiter}</version>
+                <version>${junit.jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
-
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>javax.annotation-api</artifactId>
-                <version>1.3.2</version>
+                <version>${javax.annotation.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-core</artifactId>
-                <version>3.4.5</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.22</version>
+                <version>${lombok.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>ognl</groupId>
-                <artifactId>ognl</artifactId>
-                <version>3.4.3</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
-                <version>2.2</version>
+                <version>${snakeyaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.zhxu</groupId>
+                <artifactId>okhttps-fastjson2</artifactId>
+                <version>${okhttps-fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.10.2</version>
             </dependency>
 
         </dependencies>
-
     </dependencyManagement>
 
     <build>
-
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-                        <source>8</source>
-                        <target>8</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                     </configuration>
                 </plugin>
-
-                <!--gpg-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.0</version>
+                    <version>${maven-gpg-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>sign-artifacts</id>
@@ -224,12 +211,10 @@
                         </execution>
                     </executions>
                 </plugin>
-
-                <!--source jar-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>${maven-source-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -239,12 +224,10 @@
                         </execution>
                     </executions>
                 </plugin>
-
-                <!-- Javadoc Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>${maven-javadoc-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
@@ -268,25 +251,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
-
         </plugins>
     </build>
-
 
     <distributionManagement>
         <snapshotRepository>
