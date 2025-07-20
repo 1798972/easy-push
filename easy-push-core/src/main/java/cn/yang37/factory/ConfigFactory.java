@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class ConfigFactory {
@@ -19,6 +20,8 @@ public class ConfigFactory {
     private static final String[] SUFFIXES = {".properties", ".yml", ".yaml"};
 
     private final Properties config;
+
+    private final Map<String, Object> configBeanCache = new ConcurrentHashMap<>();
 
     private ConfigFactory() {
         this.config = loadConfig();
@@ -137,9 +140,16 @@ public class ConfigFactory {
     }
 
     public <T> T getConfigProperties(Class<T> clazz, String prefix) {
+        String cacheKey = clazz.getName() + "::" + prefix;
+        Object cached = configBeanCache.get(cacheKey);
+        if (cached != null) {
+            return (T) cached;
+        }
         Properties properties = getProperties(prefix);
         try {
-            return ConfigUtils.populate(clazz, properties, prefix);
+            T bean = ConfigUtils.populate(clazz, properties, prefix);
+            configBeanCache.put(cacheKey, bean);
+            return bean;
         } catch (Exception e) {
             throw new RuntimeException("Failed to populate properties for " + clazz.getName(), e);
         }

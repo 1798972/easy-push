@@ -1,8 +1,8 @@
 package cn.yang37.chain;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapter;
-import cn.yang37.chain.node.def.DefaultEndNode;
-import cn.yang37.chain.node.def.DefaultInitNode;
+import cn.yang37.chain.node.common.CommonEndNode;
+import cn.yang37.chain.node.common.CommonInitNode;
 import cn.yang37.chain.registry.ChainEnhanceRegistry;
 import cn.yang37.chain.registry.NodeEnhanceRegistry;
 import cn.yang37.chain.registry.NodeInsertRegistry;
@@ -145,8 +145,8 @@ public abstract class MessageChain {
     }
 
     private void addDefNode() {
-        nodeClassList.add(0, DefaultInitNode.class);
-        nodeClassList.add(DefaultEndNode.class);
+        nodeClassList.add(0, CommonInitNode.class);
+        nodeClassList.add(CommonEndNode.class);
     }
 
     private void nodeClass2NodeBean() {

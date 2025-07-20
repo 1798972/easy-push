@@ -1,15 +1,13 @@
 package cn.yang37.chain.node.sms.tencent.v3;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapterSmsTencentV3;
-import cn.yang37.constant.AppConstant;
 import cn.yang37.constant.SmsTencentV3Constant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
+import cn.yang37.util.DateUtils;
 import cn.yang37.util.StringUtils;
 
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * @description:
@@ -24,14 +22,13 @@ public class SmsTencentV3ParamNode extends MessageNodeAdapterSmsTencentV3 {
     public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
 
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
-        AppConstant.YYYY_MM_DD.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String date = AppConstant.YYYY_MM_DD.format(new Date(Long.parseLong(timestamp + "000")));
+        String date = DateUtils.formatMillisToUtcDate(Long.parseLong(timestamp));
 
         // 加载参数
-        String url = configProperties.getBaseUrl();
-        String secretId = configProperties.getSecretId();
-        String secretKey = configProperties.getSecretKey();
-        String region = configProperties.getRegion();
+        String url = sceneConfig().getBaseUrl();
+        String secretId = sceneConfig().getSecretId();
+        String secretKey = sceneConfig().getSecretKey();
+        String region = sceneConfig().getRegion();
         String host = StringUtils.parseHostFromUrl(url);
 
         // 填充参数

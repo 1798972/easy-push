@@ -14,18 +14,19 @@ import java.util.List;
 public interface MessageNode {
 
     /**
-     * 根据信息上下文对象发送信息
+     * 发送单条消息
      *
-     * @param messageContext .
-     * @return .
+     * @param messageContext 消息上下文对象
+     * @return 消息上下文对象
+     * @throws Exception .
      */
     MessageContext nodeSingleSend(MessageContext messageContext) throws Exception;
 
     /**
-     * 根据信息上下文对象发送信息-批量
+     * 发送单条消息
      *
-     * @param messageContextList .34
-     * @return .
+     * @param messageContextList 消息上下文对象List
+     * @return 消息上下文对象
      */
     List<MessageContext> nodeMultipleSend(List<MessageContext> messageContextList);
 

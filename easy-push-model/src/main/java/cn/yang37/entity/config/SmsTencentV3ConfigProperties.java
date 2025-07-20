@@ -23,4 +23,9 @@ public class SmsTencentV3ConfigProperties extends SceneConfigProperties {
     private String secretKey;
     private String region;
 
+    @Override
+    public String getPrefix() {
+        return PREFIX;
+    }
+
 }

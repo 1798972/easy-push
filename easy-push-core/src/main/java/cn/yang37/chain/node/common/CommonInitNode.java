@@ -1,4 +1,4 @@
-package cn.yang37.chain.node.def;
+package cn.yang37.chain.node.common;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapter;
 import cn.yang37.entity.context.MessageContext;
@@ -15,9 +15,9 @@ import java.util.List;
  * @date: 2023/1/13 23:09
  * @version: 1.0
  */
-public class DefaultInitNode extends MessageNodeAdapter {
+public class CommonInitNode extends MessageNodeAdapter {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultInitNode.class);
+    private static final Logger log = LoggerFactory.getLogger(CommonInitNode.class);
 
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) {

@@ -1,4 +1,4 @@
-package cn.yang37.chain.node.def;
+package cn.yang37.chain.node.common;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapter;
 import cn.yang37.entity.context.MessageContext;
@@ -9,13 +9,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
- * @description: 缓存
- * @class: DefaultRedisNode
+ * @description: mysql持久化
+ * @class: DefaultMysqlNode
  * @author: yang37z@qq.com
- * @date: 2023/4/15 14:43
+ * @date: 2023/4/15 14:42
  * @version: 1.0
  */
-public class DefaultRedisNode extends MessageNodeAdapter {
+public class CommonMysqlNode extends MessageNodeAdapter {
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, IllegalAccessException, InstantiationException {
         return null;

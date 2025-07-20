@@ -1,5 +1,6 @@
-package cn.yang37.entity.message;
+package cn.yang37.entity.message.impl;
 
+import cn.yang37.entity.message.Message;
 import cn.yang37.enums.MessageSceneType;
 import lombok.*;
 

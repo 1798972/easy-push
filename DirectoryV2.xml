@@ -32,4 +32,6 @@
     <tree path="/easy-push-core/src/main/java/cn/yang37/chain/node/sms/ali/v3" title="阿里云短信V3版"/>
     <tree path="/easy-push-core/src/main/java/cn/yang37/chain/node/sms/tencent/v3" title="腾讯云短信V3版"/>
     <tree path="/easy-push-core/src/main/java/cn/yang37/chain/node/ding" title="钉钉消息"/>
+    <tree path="/easy-push-persistence" title="持久化"/>
+    <tree path="/easy-push-samples" title="样例"/>
 </trees>

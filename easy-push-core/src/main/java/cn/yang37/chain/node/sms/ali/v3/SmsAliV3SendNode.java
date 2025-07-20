@@ -29,7 +29,7 @@ public class SmsAliV3SendNode extends MessageNodeAdapterSmsAli {
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
         String authorization = ThreadContext.getContext(SmsAliV3Constant.AUTHORIZATION);
-        String url = configProperties.getBaseUrl();
+        String url = sceneConfig().getBaseUrl();
         String host = ThreadContext.getContext(SmsAliV3Constant.HOST);
         String xAcsAction = ThreadContext.getContext(SmsAliV3Constant.X_ACS_ACTION);
         String xAcsDate = ThreadContext.getContext(SmsAliV3Constant.X_ACS_DATE);

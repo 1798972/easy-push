@@ -2,7 +2,7 @@ package cn.yang37.chain.node.vx.test;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapterVxTestAccountMessage;
 import cn.yang37.entity.context.MessageContext;
-import cn.yang37.entity.message.VxTestAccountMessage;
+import cn.yang37.entity.message.impl.VxTestAccountMessage;
 import cn.yang37.util.TraceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

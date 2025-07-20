@@ -8,9 +8,8 @@ import cn.yang37.util.SignUtils;
 import cn.zhxu.okhttps.HttpResult;
 import cn.zhxu.okhttps.OkHttps;
 import com.alibaba.fastjson2.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -18,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -27,18 +27,18 @@ import java.util.List;
  * @date: 2023/1/28 10:55
  * @version: 1.0
  */
+@Slf4j
 public class DingTextSendNode extends MessageNodeAdapterDing {
-
-    private static final Logger log = LoggerFactory.getLogger(DingTextSendNode.class);
 
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
         String timestamp = messageContext.getTimestamp();
 
-        String baseUrl = configProperties.getBaseUrl();
-        String accessToken = configProperties.getAccessKey();
-        String secret = configProperties.getSecret();
-        log.debug("[config] baseUrl: {} ,ak: {},sk: {}", baseUrl, accessToken, secret);
+        String baseUrl = sceneConfig().getBaseUrl();
+        String accessToken = sceneConfig().getAccessToken();
+        String secret = sceneConfig().getSecret();
+        // 配置信息
+        logConfig();
 
         String dingUrl = formatDingSendUrl(baseUrl, accessToken, secret, timestamp);
         log.info("http url: {}", URLDecoder.decode(dingUrl, StandardCharsets.UTF_8.name()));
@@ -78,6 +78,9 @@ public class DingTextSendNode extends MessageNodeAdapterDing {
      * @return .
      */
     private static String formatDingSendUrl(String url, String accessToken, String secret, String timestamp) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+        // 默认值
+        url = Optional.ofNullable(url).orElse(DingConstant.BASE_URL);
+        // 格式化
         final String formatUrl = "{{url}}/robot/send?access_token={{accessToken}}&timestamp={{timestamp}}&sign={{sign}}";
         return formatUrl
                 .replace("{{url}}", url)
@@ -86,6 +89,4 @@ public class DingTextSendNode extends MessageNodeAdapterDing {
                 .replace("{{sign}}",
                         SignUtils.calculateSignDing(secret, timestamp));
     }
-
-
 }

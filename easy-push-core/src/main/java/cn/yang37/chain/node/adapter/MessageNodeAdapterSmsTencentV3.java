@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
  * @version: 1.0
  */
 @Slf4j
-public abstract class MessageNodeAdapterSmsTencentV3 extends MessageNodeAdapter {
-    protected SmsTencentV3ConfigProperties configProperties =
-            ConfigFactory.instance().getConfigProperties(SmsTencentV3ConfigProperties.class, SmsTencentV3ConfigProperties.PREFIX);
+public abstract class MessageNodeAdapterSmsTencentV3 extends MessageNodeAdapter{
+
+    protected SmsTencentV3ConfigProperties sceneConfig() {
+        return ConfigFactory.instance().getConfigProperties(SmsTencentV3ConfigProperties.class, SmsTencentV3ConfigProperties.PREFIX);
+    }
+
 }

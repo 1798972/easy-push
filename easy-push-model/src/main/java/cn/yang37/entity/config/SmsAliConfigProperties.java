@@ -23,4 +23,9 @@ public class SmsAliConfigProperties extends SceneConfigProperties {
     private String accessKeyId;
 
     private String accessKeySecret;
+
+    @Override
+    public String getPrefix() {
+        return PREFIX;
+    }
 }

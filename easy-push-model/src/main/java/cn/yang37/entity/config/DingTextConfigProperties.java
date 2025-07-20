@@ -17,7 +17,23 @@ public class DingTextConfigProperties extends SceneConfigProperties {
 
     public static final String PREFIX = "cn.yang37.easy-push.ding";
 
+    /**
+     * 基础路径
+     */
     private String baseUrl;
-    private String accessKey;
+
+    /**
+     * WebHook地址中的AccessToken值
+     */
+    private String accessToken;
+
+    /**
+     * 密钥值
+     */
     private String secret;
+
+    @Override
+    public String getPrefix() {
+        return PREFIX;
+    }
 }

@@ -4,7 +4,7 @@ import cn.yang37.chain.node.adapter.MessageNodeAdapterVxTestAccountMessage;
 import cn.yang37.constant.VxTestAccountConstant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
-import cn.yang37.entity.message.VxTestAccountMessage;
+import cn.yang37.entity.message.impl.VxTestAccountMessage;
 import cn.yang37.util.HttpUtils;
 import cn.yang37.util.JsonUtils;
 import cn.zhxu.okhttps.HttpResult;
@@ -34,7 +34,7 @@ public class VxTestAccountSendNode extends MessageNodeAdapterVxTestAccountMessag
         String reqData = JsonUtils.toSnakeCaseJsonString(vxTestAccountMessage);
 
         // 构建请求
-        String sendUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, configProperties.getBaseUrl(), VxTestAccountConstant.PATH);
+        String sendUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, sceneConfig().getBaseUrl(), VxTestAccountConstant.PATH);
         SHttpTask httpTask = OkHttps.sync(sendUrl)
                 .addUrlPara(VxTestAccountConstant.GetAccessToken.ACCESS_TOKEN, accessToken)
                 .setBodyPara(reqData)

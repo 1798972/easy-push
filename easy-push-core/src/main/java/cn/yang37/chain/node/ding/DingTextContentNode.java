@@ -1,16 +1,15 @@
 package cn.yang37.chain.node.ding;
 
 import cn.yang37.chain.node.adapter.MessageNodeAdapterDing;
-import cn.yang37.constant.AppConstant;
 import cn.yang37.constant.DingConstant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
 import cn.yang37.entity.dto.ding.DingTextRequestDTO;
-import cn.yang37.entity.message.DingTextMessage;
+import cn.yang37.entity.message.impl.DingTextMessage;
+import cn.yang37.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,16 +39,13 @@ public class DingTextContentNode extends MessageNodeAdapterDing {
 
     /**
      * 格式化发送数据
-     *
-     * @param messageContext
-     * @return
      */
     private String formatUserContent(MessageContext messageContext) {
         final String target = "[{{time}}]\n{{content}}";
         String tmp;
         if (false) {
             // 内容中是否自动加入时间
-            tmp = target.replace("{{time}}", AppConstant.YYYY_MM_DD_HH_MM_SS_SSS.format(new Date(System.currentTimeMillis())));
+            tmp = target.replace("{{time}}", DateUtils.nowDateTimeMillis());
         } else {
             // 只保留{{content}}
             tmp = target.replace("[{{time}}]\n", "");

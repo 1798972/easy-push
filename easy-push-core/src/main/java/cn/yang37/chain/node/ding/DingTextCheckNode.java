@@ -5,8 +5,7 @@ import cn.yang37.chain.node.adapter.MessageNodeAdapterDing;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.message.Message;
 import cn.yang37.enums.MessageContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -17,8 +16,8 @@ import java.util.List;
  * @date: 2023/1/13 10:00
  * @version: 1.0
  */
+@Slf4j
 public class DingTextCheckNode extends MessageNodeAdapterDing {
-    private static final Logger log = LoggerFactory.getLogger(DingTextCheckNode.class);
 
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) {

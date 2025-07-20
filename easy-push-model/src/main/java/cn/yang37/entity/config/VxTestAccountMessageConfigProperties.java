@@ -23,4 +23,9 @@ public class VxTestAccountMessageConfigProperties extends SceneConfigProperties 
     private String appId;
 
     private String appSecret;
+
+    @Override
+    public String getPrefix() {
+        return PREFIX;
+    }
 }

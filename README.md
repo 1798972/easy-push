@@ -5,7 +5,7 @@
 一行代码发送消息到钉钉群
 
 ```java
-	MessageContext messageContext = new SendMessageServiceImpl().singleSend(new DingTextMessage("abcdefghijk"));
+	MessageContext messageContext = new SendMessageServiceImpl().singleSend(new cn.yang37.easypush.test.DingTextMessage("abcdefghijk"));
 ```
 
 
@@ -29,12 +29,12 @@
 
 ### 1.1 支持的渠道
 
-| 序号 | 渠道             | 实体类               | 说明                                                         | 测试类                                                       | 说明文档                                |
+| 序号 | 渠道             | 实体类               | 说明文档                                                   | 官网                                                     | 测试类                                                       |
 | ---- | ---------------- | -------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------- |
-| 1    | 钉钉群文本消息   | DingTextMessage      | 钉钉文本类消息                                               | [MainTest.sendDingTextMessage](easy-push-test/src/test/java/MainTest.java) | -                                       |
-| 2    | 腾讯云短信（V3） | SmsTencentV3Message  | [腾讯云短信](https://cloud.tencent.com/document/product/382/55981) | [MainTest.sendTencentSmsV3Message](easy-push-test/src/test/java/MainTest.java) | -                                       |
-| 3    | 阿里云短信（V3） | SmsAliV3Message      | [阿里云短信](https://help.aliyun.com/zh/sms/?spm=a2c4g.11186623.0.0.24735ee7SZGzIE) | [MainTest.sendSmsAliV3Message](easy-push-test/src/test/java/MainTest.java) | -                                       |
-| 4    | 微信测试号       | VxTestAccountMessage | [微信测试号](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) | [MainTest.sendVxTestAccountMessage](easy-push-test/src/test/java/MainTest.java) | [4-微信测试号.md](docs/4-微信测试号.md) |
+| 1    | 钉钉**群文本**消息 | [DingTextMessage](easy-push-model/src/main/java/cn/yang37/entity/message/impl/DingTextMessage.java) | [钉钉群文本消息.md](docs/channel/钉钉/钉钉群文本消息.md) | [钉钉群文本消息](https://open.dingtalk.com/document/orgapp/custom-bot-to-send-group-chat-messages) | [DingTextTest](easy-push-test/src/test/java/cn/yang37/easypush/test/DingTextTest.java) |
+| 2    | 腾讯云短信（V3） | [SmsTencentV3Message](easy-push-model/src/main/java/cn/yang37/entity/message/impl/SmsTencentV3Message.java) |  | [腾讯云短信](https://cloud.tencent.com/document/product/382/55981) | [MainTest.sendTencentSmsV3Message](easy-push-test/src/test/java/MainTest.java) |
+| 3    | 阿里云短信（V3） | [SmsAliV3Message](easy-push-model/src/main/java/cn/yang37/entity/message/impl/SmsAliV3Message.java) |  | [阿里云短信](https://help.aliyun.com/zh/sms/?spm=a2c4g.11186623.0.0.24735ee7SZGzIE) | [MainTest.sendSmsAliV3Message](easy-push-test/src/test/java/MainTest.java) |
+| 4    | 微信**测试号**   | [VxTestAccountMessage](easy-push-model/src/main/java/cn/yang37/entity/message/impl/VxTestAccountMessage.java) | [微信测试号.md](docs/channel/微信/微信测试号.md) | [微信测试号](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) | [MainTest.sendVxTestAccountMessage](easy-push-test/src/test/java/MainTest.java) |
 
 
 
@@ -88,7 +88,7 @@ public interface SendMessageService {
 一行代码实现发送消息到钉钉群
 
 ```java
-	MessageContext messageContext = new SendMessageServiceImpl().singleSend(new DingTextMessage("abcdefghijk"));
+	MessageContext messageContext = new SendMessageServiceImpl().singleSend(new 	    cn.yang37.easypush.test.DingTextMessage("abcdefghijk"));
 ```
 
 #### 2.1.1 Java SE
@@ -109,7 +109,7 @@ public interface SendMessageService {
 
 
 
-##### 2.编写配置文件
+##### [2.编写配置文件](## 3.渠道明细)
 
 ```properties
 # 推送钉钉的URL,eg: https://oapi.dingtalk.com
@@ -126,7 +126,7 @@ cn.yang37.easy-push.ding.secret=xx
 
 ```java
 // 钉钉-文本类型消息
-Message message = new DingTextMessage("123");
+Message message = new cn.yang37.easypush.test.DingTextMessage("123");
 ```
 
 ##### 4.创建信息发送对象
@@ -176,7 +176,7 @@ public class MessageSenderService {
     private SendMessageService sendMessageService;
 
     public void sendDingMessage(String content) {
-        DingTextMessage message = new DingTextMessage(content);
+        cn.yang37.easypush.test.DingTextMessage message = new cn.yang37.easypush.test.DingTextMessage(content);
         MessageContext messageContext = sendMessageService.singleSend(message);
         // state显示发送结果
         Boolean state = messageContext.getState();
@@ -195,7 +195,7 @@ public class MessageSenderService {
 ```properties
 ############### 钉钉消息
 cn.yang37.easy-push.ding.base-url=https://oapi.dingtalk.com
-cn.yang37.easy-push.ding.access-key=xxx
+cn.yang37.easy-push.ding.access-token=xxx
 cn.yang37.easy-push.ding.secret=xxx
 
 ############### 腾讯云短信V3
@@ -217,15 +217,15 @@ cn.yang37.easy-push.vx.test-account.app-secret=xxx
 
 
 
-### 3.1 钉钉群消息（文本类）
+### [3.1 钉钉群消息（文本）](docs/channel/钉钉/钉钉群文本消息.md)
 
 #### 3.1.1 配置项
 
-| 前缀 | 项         | 类型   | 说明                                                         |
-| ---- | ---------- | ------ | ------------------------------------------------------------ |
-| ding | base-url   | String | 钉钉推送服务的默认url，内网时可以是代理机地址。默认值为: https://oapi.dingtalk.com |
-| ding | access-key | String | 推送钉钉时的ak                                               |
-| ding | secret     | String | 推送钉钉时的sk                                               |
+| 前缀 | 项           | 类型   | 说明                                                         |
+| ---- | ------------ | ------ | ------------------------------------------------------------ |
+| ding | base-url     | String | 钉钉推送服务的默认url，内网时可以是代理机地址。默认值为: https://oapi.dingtalk.com |
+| ding | access-token | String | 群机器人配置时，WebHook中的access_token值。                  |
+| ding | secret       | String | 群机器人配置时，提供的密钥值。                               |
 
 ```properties
 ############### 钉钉消息
@@ -236,7 +236,7 @@ cn.yang37.easy-push.ding.secret=xxx
 
 #### 3.1.2 实体类
 
-**实体类：DingTextMessage**
+**实体类：cn.yang37.easypush.test.DingTextMessage**
 
 | 字段名 | 含义     | 类型   | 说明                   |
 | ------ | -------- | ------ | ---------------------- |
@@ -245,7 +245,7 @@ cn.yang37.easy-push.ding.secret=xxx
 构建实体类：
 
 ```java
-      DingTextMessage message = new DingTextMessage("123456789");
+      cn.yang37.easypush.test.DingTextMessage message = new cn.yang37.easypush.test.DingTextMessage("123456789");
 ```
 
 

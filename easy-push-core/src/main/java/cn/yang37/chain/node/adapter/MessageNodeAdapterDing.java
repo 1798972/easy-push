@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class MessageNodeAdapterDing extends MessageNodeAdapter {
-    protected DingTextConfigProperties configProperties =
-            ConfigFactory.instance().getConfigProperties(DingTextConfigProperties.class, DingTextConfigProperties.PREFIX);
+
+    protected DingTextConfigProperties sceneConfig() {
+        return ConfigFactory.instance().getConfigProperties(DingTextConfigProperties.class, DingTextConfigProperties.PREFIX);
+    }
 }

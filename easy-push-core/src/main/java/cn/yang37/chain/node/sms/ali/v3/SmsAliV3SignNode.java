@@ -4,7 +4,7 @@ import cn.yang37.chain.node.adapter.MessageNodeAdapterSmsAli;
 import cn.yang37.constant.SmsAliV3Constant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
-import cn.yang37.entity.message.SmsAliV3Message;
+import cn.yang37.entity.message.impl.SmsAliV3Message;
 import cn.yang37.util.HashUtils;
 import cn.yang37.util.SignUtils;
 import com.alibaba.fastjson2.JSON;
@@ -156,7 +156,7 @@ public class SmsAliV3SignNode extends MessageNodeAdapterSmsAli {
         String source2Sign = String.format("%s\n%s", SmsAliV3Constant.ACS_3_HMAC_SHA_256, HashUtils.sha256HexLower(canonicalRequest));
         log.debug("signSource:\n{}", source2Sign);
 
-        String signAliSmsV3 = SignUtils.calculateSignAliSmsV3(configProperties.getAccessKeySecret(), source2Sign);
+        String signAliSmsV3 = SignUtils.calculateSignAliSmsV3(sceneConfig().getAccessKeySecret(), source2Sign);
         log.debug("signAliSmsV3: {}", signAliSmsV3);
 
         return signAliSmsV3;
@@ -176,7 +176,7 @@ public class SmsAliV3SignNode extends MessageNodeAdapterSmsAli {
 
         // 执行替换
         authorization = authorization.replace("{{SignatureAlgorithm}}", SmsAliV3Constant.ACS_3_HMAC_SHA_256)
-                .replace("{{AccessKeyId}}", configProperties.getAccessKeyId())
+                .replace("{{AccessKeyId}}", sceneConfig().getAccessKeyId())
                 .replace("{{SignedHeaders}}", parseSignedHeaders())
                 .replace("{{Signature}}", doSign(parseCanonicalRequest(paramMap, hashedRequestPayload)));
 

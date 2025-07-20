@@ -24,11 +24,11 @@ public class VxTestAccountAccessTokenNode extends MessageNodeAdapterVxTestAccoun
 
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
-        String appId = configProperties.getAppId();
-        String appSecret = configProperties.getAppSecret();
+        String appId = sceneConfig().getAppId();
+        String appSecret = sceneConfig().getAppSecret();
 
         // 构建请求
-        String tokenUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, configProperties.getBaseUrl(), VxTestAccountConstant.GetAccessToken.PATH);
+        String tokenUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, sceneConfig().getBaseUrl(), VxTestAccountConstant.GetAccessToken.PATH);
         HttpResult httpResult = OkHttps
                 .sync(tokenUrl)
                 .addUrlPara(VxTestAccountConstant.GetAccessToken.GRANT_TYPE, VxTestAccountConstant.GetAccessToken.CLIENT_CREDENTIAL)

@@ -21,7 +21,7 @@ public class SmsAliV3ParamNode extends MessageNodeAdapterSmsAli {
     @Override
     public MessageContext nodeSingleSend(MessageContext messageContext) throws Exception {
 
-        String url = configProperties.getBaseUrl();
+        String url = sceneConfig().getBaseUrl();
         String date = DateUtils.getDateTimeIso8601();
         String host = StringUtils.parseHostFromUrl(url);
         String id = messageContext.getId();

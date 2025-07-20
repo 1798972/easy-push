@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class MessageNodeAdapterSmsAli extends MessageNodeAdapter {
-    protected SmsAliConfigProperties configProperties =
-            ConfigFactory.instance().getConfigProperties(SmsAliConfigProperties.class, SmsAliConfigProperties.PREFIX);
+
+    protected SmsAliConfigProperties sceneConfig() {
+        return ConfigFactory.instance().getConfigProperties(SmsAliConfigProperties.class, SmsAliConfigProperties.PREFIX);
+    }
 }

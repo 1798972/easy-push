@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class MessageNodeAdapterVxTestAccountMessage extends MessageNodeAdapter {
 
-    protected VxTestAccountMessageConfigProperties configProperties =
-            ConfigFactory.instance().getConfigProperties(VxTestAccountMessageConfigProperties.class, VxTestAccountMessageConfigProperties.PREFIX);
-
+    protected VxTestAccountMessageConfigProperties sceneConfig() {
+        return ConfigFactory.instance().getConfigProperties(VxTestAccountMessageConfigProperties.class, VxTestAccountMessageConfigProperties.PREFIX);
+    }
 }
