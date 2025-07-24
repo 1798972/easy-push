@@ -1,6 +1,7 @@
 package cn.yang37.factory;
 
-import cn.yang37.exception.ConfigException;
+import cn.yang37.enums.ErrorCodeEnum;
+import cn.yang37.exception.EpConfigException;
 import cn.yang37.util.ConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -63,7 +64,7 @@ public class ConfigFactory {
             }
         }
         log.error("No configuration file found in candidate paths: {}", candidatePaths);
-        throw new ConfigException("Error initializing configuration file!");
+        throw ErrorCodeEnum.CONFIG_NULL.toException(EpConfigException.class);
     }
 
     private List<String> buildCandidateList() {

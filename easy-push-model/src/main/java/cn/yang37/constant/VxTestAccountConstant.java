@@ -31,7 +31,6 @@ public class VxTestAccountConstant {
 
         public static final String EXPIRES_IN = "expires_in";
 
-
     }
 
 }

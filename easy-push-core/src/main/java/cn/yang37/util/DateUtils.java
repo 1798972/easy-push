@@ -15,11 +15,11 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateUtils {
 
-    public static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS_SSS = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
+    private static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS_SSS = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss.SSS");
 
-    public static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static final DateTimeFormatter YYYY_MM_DD_UTC = DateTimeFormatter.ofPattern("yyyy/MM/dd").withZone(ZoneOffset.UTC);
+    private static final DateTimeFormatter YYYY_MM_DD_UTC = DateTimeFormatter.ofPattern("yyyy/MM/dd").withZone(ZoneOffset.UTC);
 
     /**
      * 当前本地时间格式化为 yyyy/MM/dd HH:mm:ss.SSS

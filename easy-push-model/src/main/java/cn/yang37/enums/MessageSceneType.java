@@ -30,9 +30,9 @@ public enum MessageSceneType {
     EMAIL,
 
     /**
-     * 钉钉
+     * 钉钉_群文本
      */
-    DING,
+    DING_TEXT,
 
     /**
      * 微信测试号

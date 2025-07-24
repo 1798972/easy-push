@@ -1,5 +1,8 @@
 package cn.yang37.exception;
 
+import cn.yang37.enums.ErrorCodeEnum;
+import lombok.Getter;
+
 /**
  * @description:
  * @class: PushCoreException
@@ -7,7 +10,24 @@ package cn.yang37.exception;
  * @date: 2023/4/15 10:51
  * @version: 1.0
  */
+@Getter
 public class EasyPushException extends RuntimeException {
+
+    protected int code;
+
+    protected String msg;
+
+    public EasyPushException(ErrorCodeEnum errorCodeEnum) {
+        super(errorCodeEnum.getMsg());
+        this.code = errorCodeEnum.getCode();
+        this.msg = errorCodeEnum.getMsg();
+    }
+
+    public EasyPushException(ErrorCodeEnum errorCodeEnum, Throwable cause) {
+        super(errorCodeEnum.getMsg(), cause);
+        this.code = errorCodeEnum.getCode();
+        this.msg = errorCodeEnum.getMsg();
+    }
 
     public EasyPushException() {
         super();

@@ -46,10 +46,14 @@ public class MessageContext {
     private Boolean state;
 
     /**
+     * 执行异常
+     */
+    private Throwable e;
+
+    /**
      * 提示信息
      */
     private String info;
-
 
     /**
      * 返回状态码

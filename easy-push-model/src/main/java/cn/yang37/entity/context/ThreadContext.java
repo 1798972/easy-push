@@ -6,9 +6,6 @@ import java.util.Map;
 public class ThreadContext {
 
 
-    /**
-     * 记得clean,防止内存泄露.
-     */
     private final static ThreadLocal<Map<String, Object>> CTX_HOLDER = new ThreadLocal<>();
 
     static {

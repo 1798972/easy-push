@@ -22,7 +22,7 @@ public class DingTextMessage extends Message {
 
     @Override
     public MessageSceneType getMessageSceneType() {
-        return MessageSceneType.DING;
+        return MessageSceneType.DING_TEXT;
     }
 
 }

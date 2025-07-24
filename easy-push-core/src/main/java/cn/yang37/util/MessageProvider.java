@@ -4,8 +4,8 @@ package cn.yang37.util;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.message.Message;
 import cn.yang37.enums.MessageSceneType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.alibaba.fastjson2.JSON;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,9 +18,10 @@ import java.util.UUID;
  * @date: 2023/1/11 10:39
  * @version: 1.0
  */
+@Slf4j
 public abstract class MessageProvider {
 
-    private static final Logger log = LoggerFactory.getLogger(MessageProvider.class);
+    private static final String REPLACE = "-";
 
     /**
      * 消息内容的类型是否合法
@@ -57,19 +58,19 @@ public abstract class MessageProvider {
 
     /**
      * 转换消息实体对象到MessageContext
-     *
-     * @param message .
-     * @return MessageContext
      */
     protected MessageContext message2MessageContext(Message message) {
-        final String split = "-";
-        return MessageContext.builder()
-                .id(UUID.randomUUID().toString().replace(split, ""))
+        MessageContext messageContext = MessageContext.builder()
+                .id(UUID.randomUUID().toString().replace(REPLACE, ""))
                 .messageSceneType(message.getMessageSceneType())
                 .timestamp(String.valueOf(System.currentTimeMillis()))
                 .message(message)
                 .state(false)
                 .build();
+        // 格式化TraceId
+        formatTraceId(messageContext);
+        log.debug("message: {},messageContext: {}", JSON.toJSONString(message), JSON.toJSONString(messageContext));
+        return messageContext;
     }
 
     /**
@@ -82,5 +83,9 @@ public abstract class MessageProvider {
         List<MessageContext> messageContextList = new LinkedList<>();
         messageList.forEach(message -> messageContextList.add(message2MessageContext(message)));
         return messageContextList;
+    }
+
+    private static void formatTraceId(MessageContext messageContext) {
+        TraceUtils.traceStart(messageContext.getId(), messageContext.getMessageSceneType().name());
     }
 }

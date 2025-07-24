@@ -4,8 +4,8 @@ import cn.yang37.chain.node.adapter.MessageNodeAdapterVxTestAccountMessage;
 import cn.yang37.constant.VxTestAccountConstant;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
-import cn.yang37.util.HttpUtils;
 import cn.yang37.util.JsonUtils;
+import cn.yang37.util.StringUtils;
 import cn.zhxu.okhttps.HttpResult;
 import cn.zhxu.okhttps.OkHttps;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class VxTestAccountAccessTokenNode extends MessageNodeAdapterVxTestAccoun
         String appSecret = sceneConfig().getAppSecret();
 
         // 构建请求
-        String tokenUrl = HttpUtils.formatSendUrl(VxTestAccountConstant.URL, sceneConfig().getBaseUrl(), VxTestAccountConstant.GetAccessToken.PATH);
+        String tokenUrl = StringUtils.formatUrl(sceneConfig().getBaseUrl(), VxTestAccountConstant.URL, VxTestAccountConstant.GetAccessToken.PATH);
         HttpResult httpResult = OkHttps
                 .sync(tokenUrl)
                 .addUrlPara(VxTestAccountConstant.GetAccessToken.GRANT_TYPE, VxTestAccountConstant.GetAccessToken.CLIENT_CREDENTIAL)

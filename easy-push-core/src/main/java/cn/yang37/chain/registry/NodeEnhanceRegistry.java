@@ -9,19 +9,22 @@ import java.util.*;
 
 public class NodeEnhanceRegistry {
 
-    // 结构：chain -> node -> List<interceptor>
-    private static final Map<Class<? extends MessageChain>, Map<Class<? extends MessageNodeAdapter>, List<NodeInterceptor>>> registry = new HashMap<>();
+    /**
+     * 结构：chain -> node -> List<interceptor>
+     */
+    private static final Map<Class<? extends MessageChain>, Map<Class<? extends MessageNodeAdapter>, List<NodeInterceptor>>> REGISTRY = new HashMap<>();
 
     public static void register(Class<? extends MessageChain> chainClass,
                                 Class<? extends MessageNodeAdapter> nodeClass,
                                 NodeInterceptor interceptor) {
-        registry
-                .computeIfAbsent(chainClass, k -> new HashMap<>())
+        REGISTRY.computeIfAbsent(chainClass, k -> new HashMap<>())
                 .computeIfAbsent(nodeClass, k -> new ArrayList<>())
                 .add(interceptor);
     }
 
-    // 可选lambda重载
+    /**
+     * 可选lambda重载
+     */
     public static void register(Class<? extends MessageChain> chainClass,
                                 Class<? extends MessageNodeAdapter> nodeClass,
                                 QuadConsumer<Class<? extends MessageChain>, Class<? extends MessageNodeAdapter>, MessageNodeAdapter, MessageContext> before,
@@ -33,6 +36,7 @@ public class NodeEnhanceRegistry {
                     before.accept(c, n, node, ctx);
                 }
             }
+
             @Override
             public void afterNode(Class<? extends MessageChain> c, Class<? extends MessageNodeAdapter> n, MessageNodeAdapter node, MessageContext ctx) {
                 if (after != null) {
@@ -43,9 +47,19 @@ public class NodeEnhanceRegistry {
     }
 
     public static List<NodeInterceptor> getInterceptors(Class<? extends MessageChain> chainClass, Class<? extends MessageNodeAdapter> nodeClass) {
-        return registry.getOrDefault(chainClass, Collections.emptyMap()).getOrDefault(nodeClass, Collections.emptyList());
+        return REGISTRY.getOrDefault(chainClass, Collections.emptyMap()).getOrDefault(nodeClass, Collections.emptyList());
     }
 
-    // 辅助函数（四参Consumer接口）
-    @FunctionalInterface public interface QuadConsumer<A,B,C,D> { void accept(A a, B b, C c, D d); }
+    /**
+     * 辅助函数（四参Consumer接口）
+     *
+     * @param <A>
+     * @param <B>
+     * @param <C>
+     * @param <D>
+     */
+    @FunctionalInterface
+    public interface QuadConsumer<A, B, C, D> {
+        void accept(A a, B b, C c, D d);
+    }
 }

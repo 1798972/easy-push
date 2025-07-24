@@ -8,7 +8,8 @@ import cn.yang37.chain.registry.NodeEnhanceRegistry;
 import cn.yang37.chain.registry.NodeInsertRegistry;
 import cn.yang37.entity.context.MessageContext;
 import cn.yang37.entity.context.ThreadContext;
-import cn.yang37.exception.ExecuteException;
+import cn.yang37.enums.ErrorCodeEnum;
+import cn.yang37.exception.EpChainExecuteException;
 import cn.yang37.factory.MessageNodeFactory;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,8 @@ public abstract class MessageChain {
         try {
             resultMessageContext = chainEndDeal(chainExecute(chainPreDeal(messageContext)));
         } catch (Exception e) {
-            throw new ExecuteException(e);
+            ThreadContext.clean();
+            throw ErrorCodeEnum.CHAIN_EXECUTE_ERROR.toException(EpChainExecuteException.class);
         } finally {
             ThreadContext.clean();
         }
@@ -121,20 +123,21 @@ public abstract class MessageChain {
      */
     private void insertUserNode() {
         List<NodeInsertRegistry.NodeInsertRequest> requests = NodeInsertRegistry.getInsertRequests(this.getClass());
-        if (!requests.isEmpty()) {
-            // 排序 如果有多个先按index升序插入 避免错位
-            requests.sort(Comparator.comparingInt(r -> r.index));
-            for (NodeInsertRegistry.NodeInsertRequest req : requests) {
-                int idx = req.index;
-                // 下标容错：不能越界
-                if (idx < 0) {
-                    idx = 0;
-                }
-                if (idx > nodeClassList.size()) {
-                    idx = nodeClassList.size();
-                }
-                nodeClassList.add(idx, req.nodeClass);
+        if (requests.isEmpty()) {
+            return;
+        }
+        // 排序 如果有多个先按index升序插入 避免错位
+        requests.sort(Comparator.comparingInt(r -> r.index));
+        for (NodeInsertRegistry.NodeInsertRequest req : requests) {
+            int idx = req.index;
+            // 下标容错：不能越界
+            if (idx < 0) {
+                idx = 0;
             }
+            if (idx > nodeClassList.size()) {
+                idx = nodeClassList.size();
+            }
+            nodeClassList.add(idx, req.nodeClass);
         }
     }
 

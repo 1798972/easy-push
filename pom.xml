@@ -14,7 +14,6 @@
 
     <modules>
         <module>easy-push-app</module>
-        <module>easy-push-channel</module>
         <module>easy-push-core</module>
         <module>easy-push-dist</module>
         <module>easy-push-model</module>

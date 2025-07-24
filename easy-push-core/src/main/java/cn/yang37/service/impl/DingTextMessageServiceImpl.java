@@ -14,7 +14,7 @@ import cn.yang37.service.AbstractMessageService;
  * @date: 2023/1/12 15:13
  * @version: 1.0
  */
-@MessageScene(MessageSceneType.DING)
+@MessageScene(MessageSceneType.DING_TEXT)
 @MessageChain(MessageChainDing.class)
 public class DingTextMessageServiceImpl extends AbstractMessageService {
 }

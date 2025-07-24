@@ -50,4 +50,15 @@ public class StringUtils {
         return encodedPath;
     }
 
+    /**
+     * 传入realStr,返回realStr+append
+     * 如果realStr为空,则返回defStr+append
+     */
+    public static String formatUrl(String realStr, String defStr, String append) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(realStr)) {
+            return defStr + append;
+        }
+        return realStr + append;
+    }
+
 }
