@@ -1,9 +1,9 @@
-import cn.yang37.app.impl.SendMessageServiceImpl;
-import cn.yang37.entity.context.MessageContext;
-import cn.yang37.entity.message.impl.DingTextMessage;
-import cn.yang37.entity.message.impl.SmsAliV3Message;
-import cn.yang37.entity.message.impl.SmsTencentV3Message;
-import cn.yang37.entity.message.impl.VxTestAccountMessage;
+import cn.yang37.easypush.app.impl.SendMessageServiceImpl;
+import cn.yang37.easypush.entity.context.MessageContext;
+import cn.yang37.easypush.entity.message.impl.DingTextMessage;
+import cn.yang37.easypush.entity.message.impl.SmsAliV3Message;
+import cn.yang37.easypush.entity.message.impl.SmsTencentV3Message;
+import cn.yang37.easypush.entity.message.impl.VxTestAccountMessage;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

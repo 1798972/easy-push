@@ -1,8 +1,8 @@
 package cn.yang37.easypush.test;
 
-import cn.yang37.app.impl.SendMessageServiceImpl;
-import cn.yang37.entity.context.MessageContext;
-import cn.yang37.entity.message.Message;
+import cn.yang37.easypush.app.impl.SendMessageServiceImpl;
+import cn.yang37.easypush.entity.context.MessageContext;
+import cn.yang37.easypush.entity.message.Message;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
